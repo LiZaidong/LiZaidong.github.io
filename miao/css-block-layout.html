@@ -18,26 +18,20 @@
     header{
       color: #fff;
     }
-    main section:nth-child(2) li{
+    main section:nth-child(2) ul{
+      margin-left: -15px;
+      font-size: 0;
+    }
+    main section:nth-child(2) li li{
+      display: inline-block;
       box-sizing: border-box;
-      margin: 15px 0;
+      margin: 15px 0 15px 30px;
       width: 180px;
       height: 40px;
       line-height: 2;
       background: pink;
       border: 3px solid;
-    }
-    main section:nth-child(2) li:hover{
-      background: red;
-    }
-    main section:nth-child(2) li:nth-of-type(n+5):nth-of-type(-n+8){
-      margin-left: 210px;
-    }
-    main section:nth-child(2) li:nth-of-type(n+8){
-      margin-left: 420px;
-    }
-    main section:nth-child(2) li:nth-of-type(5),main section:nth-child(2) li:nth-of-type(9){
-      margin-top: -220px;
+      font-size: initial;
     }
     main section:nth-child(3) ul{
       overflow: hidden;
@@ -64,18 +58,34 @@
     </section>
     <section>
       <ul>
-        <li>宽180高40(包含边框)</li>
-        <li>水平间隙30px</li>
-        <li>垂直间隙15px</li>
-        <li>边框宽度3px</li>
-        <li>产品</li>
-        <li>产品</li>
-        <li>产品</li>
-        <li>产品</li>
-        <li>产品</li>
-        <li>产品</li>
-        <li>产品</li>
-        <li>产品</li>
+        <li>
+          <ul>
+            <li>宽180高40(包含边框)</li>
+            <li>产品</li>
+            <li>产品</li>
+          </ul>
+        </li>
+        <li>
+          <ul>
+            <li>水平间隙30px</li>
+            <li>产品</li>
+            <li>产品</li>
+          </ul>
+        </li>
+        <li>
+          <ul>
+            <li>垂直间隙15px</li>
+            <li>产品</li>
+            <li>产品</li>
+          </ul>
+        </li>
+        <li>
+          <ul>
+            <li>边框宽度3px</li>
+            <li>产品</li>
+            <li>产品</li>
+          </ul>
+        </li>
       </ul>
     </section>
     <section>
