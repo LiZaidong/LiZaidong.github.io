@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport"
+        content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>background-practise</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+    }
+    .icon {
+      height: 55px;
+    }
+    .icon {
+      width: 55px;
+      height: 55px;
+      margin-left: auto;
+      background-color: #ff6700;
+      background-image: url(images/mi-home.png), url(images/mi-logo.png);
+      background-repeat: no-repeat;
+      background-position: -55px center, 3px center;
+      transition: background-position 0.2s ease;
+    }
+    .icon:hover {
+      background-position: 3px center, 58px center;
+    }
+    body{
+      height: 100vh;
+      margin-bottom: 200px;
+      background-image: url(images/initial.jpg);
+      background-repeat: no-repeat;
+      background-position: left 55px;
+      background-attachment: fixed;
+    }
+    .glassy{
+      margin-left: 100px;
+      margin-top: 100px;
+      margin-bottom: 200px;
+      background-image: url(images/glassy.jpg);
+      background-repeat: no-repeat;
+      background-position: 0px 55px;
+      background-attachment: fixed;
+    }
+    li {
+      list-style: none;
+      box-sizing: border-box;
+      height: calc(100vh - 55px);
+      border: 1px solid #000;
+      margin-left: 400px;
+      background-repeat: no-repeat;
+      background-position: calc(100vw - 600px) 255px;
+      background-attachment: fixed;
+      background-size: 400px;
+    }
+    li:nth-child(1) {
+      background-image: url(images/porsche-model1.png);
+    }
+    li:nth-child(2) {
+      background-image: url(images/porsche-model2.png);
+    }
+    li:nth-child(3) {
+      background-image: url(images/porsche-model3.png);
+    }
+  </style>
+</head>
+<body>
+  <div class="icon"></div>
+  <div class="glassy">
+    <ul>
+      <li></li>
+      <li></li>
+      <li></li>
+    </ul>
+  </div>
+  <div class="car">
+
+  </div>
+  <!--<section class="icon">-->
+    <!--<div></div>-->
+  <!--</section>-->
+  <!--<section class="car">-->
+    <!--<ul>-->
+      <!--<li></li>-->
+      <!--<li></li>-->
+      <!--<li></li>-->
+    <!--</ul>-->
+  <!--</section>-->
+  <!--<section class="glassy-initial">-->
+    <!--<div></div>-->
+  <!--</section>-->
+
+</body>
+</html>
