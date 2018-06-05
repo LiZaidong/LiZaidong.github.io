@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>star-font-awesome</title>
+  <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
+  <style>
+    * {
+      /* background: rgba(0,0,0,0.1); */
+      margin: 0;
+    }
+    .wrapper {
+      width: 200px;
+      height: 40px;
+      overflow: hidden;
+      position: relative;
+    }
+    .box {
+      display: inline-block;
+      position: relative;
+      left: -200px;
+      font-size: 0;
+      width: 400px;
+      height: 40px;
+    }
+    .fa {
+      font-size: 40px;
+      width: 40px;
+    }
+    .fa-star {
+      color: #e3ce71;
+    }
+    .fa-star-o {
+      color: #777;
+    }
+    .wrapper span {
+      position: absolute;
+      top: 0;
+      z-index: 1;
+      width: 40px;
+      height: 40px;
+    }
+    .wrapper span:nth-child(2) {
+      left: 40px;
+    }
+    .wrapper span:nth-child(3) {
+      left: 80px;
+    }
+    .wrapper span:nth-child(4) {
+      left: 120px;
+    }
+    .wrapper span:nth-child(5) {
+      left: 160px;
+    }
+
+    .wrapper span:first-child:hover ~ div {
+      left: -160px;
+    }
+    .wrapper span:nth-child(2):hover ~ div {
+      left: -120px;
+    }
+    .wrapper span:nth-child(3):hover ~ div {
+      left: -80px;
+    }
+    .wrapper span:nth-child(4):hover ~ div {
+      left: -40px;
+    }
+    .wrapper span:nth-child(5):hover ~ div {
+      left: 0;
+    }
+
+    .wrapper-2 .fa-star {
+      display: none;
+    }
+    .wrapper-2 span {
+      position: absolute;
+    }
+    .wrapper-2 span span {
+      position: absolute;
+      top: 0;
+      right: -40px;
+    }
+    .wrapper-2 span:hover>.fa-star-o {
+      display: none;
+    }
+    .wrapper-2 span:hover>.fa-star{
+      display: inline-block;
+    }
+  </style>
+</head>
+<body>
+  <section class="wrapper">
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <div class="box">
+      <i class="fa fa-star"></i>
+      <i class="fa fa-star"></i>
+      <i class="fa fa-star"></i>
+      <i class="fa fa-star"></i>
+      <i class="fa fa-star"></i>
+      <i class="fa fa-star-o"></i>
+      <i class="fa fa-star-o"></i>
+      <i class="fa fa-star-o"></i>
+      <i class="fa fa-star-o"></i>
+      <i class="fa fa-star-o"></i>
+    </div>
+  </section>
+  <section class="wrapper-2">
+    <span>
+      <i class="fa fa-star-o"></i><i class="fa fa-star"></i>
+      <span>
+        <i class="fa fa-star-o"></i><i class="fa fa-star"></i>
+        <span>
+          <i class="fa fa-star-o"></i><i class="fa fa-star"></i>
+          <span>
+            <i class="fa fa-star-o"></i><i class="fa fa-star"></i>
+            <span>
+              <i class="fa fa-star-o"></i><i class="fa fa-star"></i>
+            </span>
+          </span>
+        </span>
+      </span>
+    </span>
+  </section>
+</body>
+</html>

@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport"
+        content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>ios-checkbox</title>
+</head>
+<style>
+  * {
+    margin: 0;
+    padding: 0;
+  }
+
+  ul {
+    list-style: none;
+  }
+
+  .tab {
+    color: #9b9b9b;
+  }
+
+  .fz-fix {
+    font-size: 0;
+  }
+
+  .fz-fix * {
+    font-size: initial;
+  }
+
+  /*[class*=level] > .arrow {*/
+  li {
+    position: relative;
+  }
+
+  .arrow::after {
+    content: '';
+    display: block;
+    position: absolute;
+    border: 6px solid;
+    border-color: transparent;
+  }
+
+  .arrow-down::after {
+    top: 31px;
+    right: 2px;
+    border-top-color: #fff;
+  }
+
+  /*.arrow:hover > [class*=level] {*/
+  li:hover > ul {
+    display: block;
+  }
+
+  .level-1 {
+    background-color: #22282c;
+  }
+
+  .level-1 > .arrow {
+    padding-right: 20px;
+  }
+
+  .level-1 > li {
+    display: inline-block;
+    height: 68px;
+    line-height: 68px;
+    padding: 0 14px;
+    margin-left: 14px;
+  }
+
+  /*.level-2,.level-3,.level-4 {*/
+  ul ul {
+    display: none;
+    position: absolute;
+    background-color: #444;
+  }
+
+  .level-2 {
+    left: 0;
+  }
+
+  .level-2 li {
+    width: 234px;
+    height: 70px;
+    line-height: 70px;
+    text-indent: 10px;
+    color: #fff;
+  }
+
+  .level-2 li:hover {
+    background-color: #fd9827;
+  }
+
+  /*.level-3,.level-4 {*/
+  ul ul ul {
+    top: 0;
+    left: 100%;
+  }
+
+</style>
+<body>
+<section class="tab">
+  <ul class="level-1 fz-fix">
+    <li>首页</li>
+    <li>HTML+CSS</li>
+    <li class="arrow arrow-down">javacript
+      <ul class="level-2">
+        <li>ES2015(2016)</li>
+        <li class="arrow">Vue.js
+          <ul class="level-3">
+            <li>jQuery</li>
+            <li class="arrow">实用函数与方法
+              <ul class="level-4">
+                <li>jQuery</li>
+                <li>实用函数与方法</li>
+                <li>Node.js</li>
+              </ul>
+            </li>
+            <li>Node.js</li>
+          </ul>
+        </li>
+        <li>React</li>
+        <li>jQuery</li>
+        <li>实用函数方法</li>
+        <li>Node.js</li>
+      </ul>
+    </li>
+    <li>前端工具</li>
+    <li>前端资源</li>
+    <li>标签</li>
+  </ul>
+</section>
+</body>
+</html>

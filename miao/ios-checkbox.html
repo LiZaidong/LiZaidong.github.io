@@ -205,6 +205,17 @@
   #like:checked+label .like div{
     opacity: 1;
   }
+
+  #like-2+label{
+    width: 100px;
+    height: 100px;
+    background-image: url(https://abs.twimg.com/a/1526339738/img/animations/web_heart_animation_edge.png);
+    background-repeat: no-repeat;
+  }
+  #like-2:checked + label{
+    transition: background-position 1s steps(28);
+    background-position: -2800px 0;
+  }
 </style>
 <body>
   <input type="checkbox" id="switch">
@@ -248,5 +259,7 @@
       <div></div>
     </section>
   </label>
+  <input type="checkbox" id="like-2">
+  <label for="like-2"></label>
 </body>
 </html>

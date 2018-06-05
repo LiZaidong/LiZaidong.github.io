@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width">
+  <title>dictionary</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+    }
+
+    div {
+      width: 200px;
+      height: 40px;
+    }
+
+    div:nth-child(1) {
+      background-color: pink;
+    }
+
+    div:nth-child(2) {
+      background-color: aqua;
+    }
+
+    div:nth-child(3) {
+      background-color: silver;
+    }
+
+    div:nth-child(4) {
+      background-color: tan;
+    }
+
+    section {
+      margin: 10px 0;
+    }
+
+    .float div:first-child {
+      float: left;
+    }
+
+    .float div:not(first-chld) {
+      float: right;
+    }
+
+    .float div:last-child {
+      float: none;
+      width: auto;
+      overflow: auto;
+    }
+
+    .inline {
+      font-size: 0;
+    }
+
+    .inline div {
+      display: inline-block;
+      font-size: initial;
+      vertical-align: top;
+    }
+
+    .inline div:nth-child(2) {
+      width: calc(100% - 600px);
+      overflow: auto;
+    }
+
+    .position {
+      position: relative;
+      height: 40px;
+    }
+
+    .position div {
+      position: absolute;
+    }
+
+    .position div:first-child {
+      left: 0;
+    }
+
+    .position div:nth-of-type(2) {
+      left: 200px;
+      right: 400px;
+      width: auto;
+      overflow: auto;
+    }
+
+    .position div:nth-last-of-type(2) {
+      right: 200px;
+    }
+
+    .position div:last-child {
+      right: 0;
+    }
+
+    .matrix {
+      /*margin-right: 2vw;*/
+    }
+
+    .matrix::after {
+      content: '';
+      display: table;
+      clear: both;
+    }
+
+    .matrix div {
+      position: relative;
+      float: left;
+      width: 30.666vw;
+      height: auto;
+      margin: 10px 0 10px 2vw;
+      font-size: 40px;
+      word-break: break-all;
+      overflow: auto;
+      background-color: #ccc;
+    }
+    .matrix div::before {
+      content: '';
+      display: block;
+      padding-bottom: 100%;
+    }
+    .matrix main {
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+    }
+
+    .group div {
+      background-color: pink;
+    }
+
+    .group {
+      border-bottom: 10px solid;
+      margin: 10px 0;
+      overflow: hidden;
+    }
+
+    .group div {
+      float: left;
+      margin-left: 2vw;
+      margin-bottom: 10px;
+    }
+
+    /* 1个 */
+    .group-1 div:first-child:last-child {
+      width: 96vw;
+      height: 96vw;
+    }
+
+    /* 2个 */
+    .group-2 div:first-child:nth-last-child(2) ~ div, .group-2 div:first-child {
+      width: 47vw;
+      height: 47vw;
+    }
+
+    /* 3个 */
+    .group-3 div:first-child:nth-last-child(3) ~ div,.group-3 div:first-child {
+      width: 30.666vw;
+      height: 30.666vw;
+    }
+
+    /* 4个 */
+    .group-4 div:first-child:nth-last-child(4) ~ div,.group-4 div:first-child {
+      width: 30.666vw;
+      height: 30.666vw;
+    }
+    .group.group-4 div:nth-child(4):last-child {
+      width: 96vw;
+      height: 96vw;
+    }
+
+    /* 5个 */
+    .group-5 div:first-child:nth-last-child(5) ~ div,.group-5 div:first-child {
+      width: 30.666vw;
+      height: 30.666vw;
+    }
+    .group.group-5 div:nth-child(4):nth-last-child(2)+div, .group.group-5 div:nth-child(4):nth-last-child(2){
+      width: 47vw;
+      height: 47vw;
+    }
+
+    /* 6个 */
+    .group-6 div:first-child:nth-last-child(6) ~ div,.group-6 div:first-child {
+      width: 30.666vw;
+      height: 30.666vw;
+    }
+  </style>
+</head>
+<body>
+  <section class="float">
+    <div>float</div>
+    <div></div>
+    <div></div>
+    <div>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Animi asperiores blanditiis cupiditate doloremque
+      dolores ducimus, enim eos ex expedita harum hic illo incidunt itaque minus modi molestiae possimus quae qui.
+    </div>
+  </section>
+  <section class="inline">
+    <div>inline-block</div>
+    <div>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Consequatur cum cupiditate dolore ea, earum enim
+      explicabo fuga illum laborum nam natus necessitatibus numquam officia, possimus quasi suscipit ullam vitae
+      voluptate?
+    </div>
+    <div></div>
+    <div></div>
+  </section>
+  <section class="position">
+    <div>absolute</div>
+    <div>Lorem ipsum dolor sit amet, consectetur adipisicing elit. A ab atque aut, dolorum ducimus eaque eum, excepturi
+      fuga fugiat iusto laboriosam modi nihil nobis odio quasi quia quibusdam, sit! Architecto.
+    </div>
+    <div></div>
+    <div></div>
+  </section>
+
+  <section class="matrix">
+    <div><main>Lorem ipsum dolor sit amet, consectetur adipisicing elit. At ea enim, explicabo iusto magnam mollitia reiciendis
+      rem saepe vel voluptates. Cumque delectus dolore dolorum, fuga incidunt ipsam, nam numquam odio, possimus quaerat
+      quo sint? Ab aliquid asperiores debitis sunt voluptas.
+    </main></div>
+    <div><main>
+      wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+    </main></div>
+    <div><main></main></div>
+    <div><main></main></div>
+    <div><main></main></div>
+    <div><main></main></div>
+  </section>
+
+  <section class="group group-1">
+    <div></div>
+  </section>
+  <section class="group group-2">
+    <div></div>
+    <div></div>
+  </section>
+  <section class="group group-3">
+    <div></div>
+    <div></div>
+    <div></div>
+  </section>
+  <section class="group group-4">
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+  </section>
+  <section class="group group-5">
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+  </section>
+  <section class="group group-6">
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+  </section>
+</body>
+</html>

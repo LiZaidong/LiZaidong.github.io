@@ -187,12 +187,12 @@ header {
               }
               & a:hover{
                 background: none;
-              }
-              & a:hover .info{
-                color: initial;
-              }
-              & a:hover .info .del{
-                display: block;
+                .info{
+                  color: initial;
+                  .del{
+                    display: block;
+                  }
+                }
               }
             }
           }
@@ -482,11 +482,13 @@ header {
           font-size: 20px;
         }
       }
-      &:hover > a{
-        background-color: #fc6721;
-      }
-      &:hover .side-bar-list {
-        display: block;
+      &:hover {
+        & > a {
+          background-color: #fc6721;
+        }
+        .side-bar-list {
+          display: block;
+        }
       }
     }
     .side-bar-list {
@@ -513,7 +515,7 @@ header {
             color: initial;
             white-space: nowrap;
           }
-          &:hover span {//lzd
+          &:hover span {
             color: #fe6721;
           }
         }
@@ -617,6 +619,7 @@ header {
       width: 33.33%;
       height: 85px;
       a {
+        box-sizing: border-box;
         position: relative;
         display: block;
         height: 100%;

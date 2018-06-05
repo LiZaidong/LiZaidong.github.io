@@ -1,0 +1,62 @@
+/*
+ * 使用Stylebot/Stylish修改jsbin站点：
+ * 1 去除底部广告并让页面恢复协调
+ * 2 给预览区增加边框
+ * 3 让预览区上方的按钮总是无法挡住预览区
+ * 4 在页面放大后隐藏控制按钮
+ * 5 在页面放大后将顶部导航栏高度降低
+*/
+
+.card header {
+  display: none;
+}
+
+.bsaapi main {
+  height: 100%;
+}
+
+#live iframe {
+  padding-top: 55px;
+  border: 4px solid lightgreen;
+}
+
+#live .label {
+  height: 40px;
+}
+
+#live .label .options {
+  white-space: nowrap;
+}
+
+.menu.inline-menu {
+  display: none;
+}
+
+@media only screen and (max-width: 735px){
+  #source {
+    bottom: 0;
+  }
+}
+
+@media only screen and (max-width: 735px){
+  #control {
+    height: 16px;
+  }
+}
+@media only screen and (max-width: 735px){
+  #control #panels > a.button {
+    height: 16px;
+    line-height: 16px;
+  }
+}
+@media only screen and (max-width: 735px){
+  .mobile-nav-trigger img {
+    height: 12px;
+  }
+}
+
+@media only screen and (max-width: 735px){
+  #bin {
+    top: 16px;
+  }
+}
