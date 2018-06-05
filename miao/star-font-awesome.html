@@ -9,6 +9,9 @@
       /* background: rgba(0,0,0,0.1); */
       margin: 0;
     }
+    section {
+      height: 40px;
+    }
     .wrapper {
       width: 200px;
       height: 40px;
@@ -86,6 +89,25 @@
     .wrapper-2 span:hover>.fa-star{
       display: inline-block;
     }
+
+    .wrapper-3 {
+      font-size: 0;
+    }
+    .wrapper-3 i.fa-star {
+      display: none;
+    }
+    .wrapper-3:hover span i.fa-star-o {
+      display: none;
+    }
+    .wrapper-3:hover span i.fa-star {
+      display: inline-block;
+    }
+    .wrapper-3 span:hover ~ span i.fa-star-o {
+      display: inline-block;    
+    }
+    .wrapper-3 span:hover ~ span i.fa-star {
+      display: none;
+    }
   </style>
 </head>
 <body>
@@ -124,6 +146,13 @@
         </span>
       </span>
     </span>
+  </section>
+  <section class="wrapper-3">
+    <span><i class="fa fa-star"></i><i class="fa fa-star-o"></i></span>
+    <span><i class="fa fa-star"></i><i class="fa fa-star-o"></i></span>
+    <span><i class="fa fa-star"></i><i class="fa fa-star-o"></i></span>
+    <span><i class="fa fa-star"></i><i class="fa fa-star-o"></i></span>
+    <span><i class="fa fa-star"></i><i class="fa fa-star-o"></i></span>
   </section>
 </body>
 </html>
