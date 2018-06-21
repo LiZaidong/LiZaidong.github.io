@@ -1,0 +1,41 @@
+<meta charset="UTF-8">
+<script>
+  {
+    var a = Number(prompt('输入二元一次方程的a'))
+    var b = Number(prompt('输入二元一次方程的b'))
+    var c = Number(prompt('输入二元一次方程的c'))
+    var delta = b * b - 4 * a * c
+    var s_delta = Math.sqrt(delta)
+    var x1 = (-b + s_delta) / 2 / a
+    var x2 = (-b - s_delta) / 2 / a
+
+    if (delta < 0) {
+      s_delta = Math.sqrt(-delta) + '*i'
+      console.log('(-b+' + s_delta + ')/2/a, (-b+' + s_delta + ')/2/a')
+    } else if (delta === 0) {
+      console.log('x=' + x1)
+    } else {
+      console.log('x1=' + x1 + ', x2=' + x2)
+    }
+  }
+
+  {
+    var a = Number(prompt('输入一元二次方程的a'))
+    var b = Number(prompt('输入一元二次方程的b'))
+    var c = Number(prompt('输入一元二次方程的c'))
+    var d = Number(prompt('输入一元二次方程的d'))
+    var e = Number(prompt('输入一元二次方程的e'))
+    var f = Number(prompt('输入一元二次方程的f'))
+
+    var x = (b * f - c * e) / (b * d - a * e)
+    var y = (a * e - b * d) / (a * f - c * d)
+
+    if(a / d !== b / e){
+      console.log('x=' + x, ', y=' + y)
+    } else if (b / e === c / f && a / d === c / f) {
+      console.log('无数解')
+    } else {
+      console.log('无解')
+    }
+  }
+</script>

@@ -439,6 +439,9 @@ header {
       width: 245px;
       height: 0;
       overflow: hidden;
+      &:hover {
+        height: 301px;
+      }
       ul {
         border: 1px solid #fe6721;
         border-top: none;
