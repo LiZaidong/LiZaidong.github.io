@@ -423,7 +423,11 @@
     alert('输入一个字符')
     char= prompt('输入字符char')
   }
-  console.log(char.charCodeAt())
+  if (char.charCodeAt() % 2 === 0) {
+    console.log('NO')
+  } else {
+    console.log('YES')
+  }
 </script>
 <script xtype="x" id="ch0104/05">
   // 05:整数大小比较
