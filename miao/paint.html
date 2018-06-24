@@ -23,20 +23,18 @@
     ctx.fillRect(x, y, 1, 1)
   }
 </script>
-<script>
+<script xtype="x">
   // YOUR CODE GOES HERE
   var width = 400
   var height = 300
   // 画一条实线
-  for (var i = 0; i <= width / 2; i++) {
+  for (var i = 0; i <= width; i++) {
     dot(i, 10)
-    dot(width - i, 10)
   }
 
   // 画一条一个实点一个空点的虚线
-  for (var i = 0; i <= width / 2; i = i + 2) {
+  for (var i = 0; i <= width; i = i + 2) {
     dot(i, 20)
-    dot(width - i, 20)
   }
   // 画一条两个实点两个空点的虚线
   for (var i = 0; i <= width; i = i + 4) {
@@ -50,15 +48,13 @@
     dot(i + 2, 40)
   }
   // 画一条45度的斜线
-  for (var i = 0; i <= height / 2; i++) {
+  for (var i = 0; i <= height; i++) {
     dot(i, i)
-    dot(height - i, height - i)
   }
 
   // 画一条跨越画布左上角和右下角的对角线
-  for (var i = 0; i <= height / 2; i++) {
+  for (var i = 0; i <= height; i++) {
     dot(width / height * i, i)
-    dot(width / height * (height - i), height - i)
   }
 
   // 画一个实心矩形
@@ -76,10 +72,11 @@
   dot(200 + i, 200 + j, 'rgb(255,' + g + ',' + b + ')')
     }
   }
+
   //画一个空心的圆
-  var r = 50
   for (var i = 0; i <= 360; i += 1) {
-    dot(100 + 50 * Math.sin(i), 100 + 50 * Math.cos(i))
+    dot(100 + 50 * Math.sin(Math.PI / 180 * i)
+, 100 + 50 * Math.cos(Math.PI / 180 * i))
   }
 </script>
 </html>
