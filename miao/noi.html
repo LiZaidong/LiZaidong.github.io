@@ -45,7 +45,7 @@
       sum += n
     }
   } 
-  console.log(sum)
+  console.log(Math.floor(sum))
 </script>
 <script xtype="x" id="ch0103/04">
   // 04:带余除法
@@ -139,6 +139,7 @@
 </script>
 <script xtype="x" id="ch0103/09">
   // 09:与圆相关的计算
+  var pi = 3.14159
   var diameter = 0
   var perimeter = 0
   var area = 0
@@ -148,8 +149,8 @@
     r = Number(prompt('输入圆的半径r '))
   } 
   diameter = 2 * r
-  perimeter = 2 * Math.PI * r
-  area = Math.PI * r * r
+  perimeter = 2 * pi * r
+  area = pi * r * r
   console.log(diameter.toFixed(4) + ' ' + perimeter.toFixed(4) + ' ' + area.toFixed(4))
 </script>
 <script xtype="x" id="ch0103/10">
@@ -207,11 +208,14 @@
     n = Number(prompt('输入一个三位数'))
   }
   digit = Math.abs(n) % 10
-  ten = Math.floor(Math.abs(n) % 100 / 10)
+  ten = Math.floor(Math.abs(n) / 10 % 10)
   hundred = Math.floor(Math.abs(n) / 100)
-  reverse = digit * 100 + ten * 10 + hundred
+  digit = digit ? (digit + '') : '0'
+  ten = ten ? (ten + '') : '0'
+  hundred = hundred ? (hundred + '') : '0'
+  reverse = digit + ten + hundred
   if (n < 0) {
-    console.log(-reverse)
+    console.log('-' + reverse)
   } else {
     console.log(reverse)
   }
@@ -324,7 +328,6 @@
   b = Math.sqrt((x1 - x3) * (x1 - x3) + (y1 - y3) * (y1 - y3))
   c = Math.sqrt((x2 - x3) * (x2 - x3) + (y2 - y3) * (y2 - y3))
   s = (a + b + c) / 2
-  console.log(a, b, c)
   area = Math.sqrt(s * (s - a) * (s - b) * (s - c))
   console.log(area.toFixed(2))
 </script>
@@ -420,7 +423,11 @@
     alert('输入一个字符')
     char= prompt('输入字符char')
   }
-  console.log(char.charCodeAt())
+  if (char.charCodeAt() % 2 === 0) {
+    console.log('NO')
+  } else {
+    console.log('YES')
+  }
 </script>
 <script xtype="x" id="ch0104/05">
   // 05:整数大小比较
@@ -732,10 +739,10 @@
   if (b * b === 4 * a * c) {
     console.log('x1=x2=' + x1)
   } else if(b * b > 4 * a * c) {
-    console.log('x1=' + x1 + 'x2=' + x2 + ', 其中x1>x2')
+    console.log('x1=' + x1 + 'x2=' + x2 + ';其中x1>x2')
   } else {
     s_delta = Math.sqrt(-delta)
-    console.log('x1=' + ((-b) / (2 * a)).toFixed(5) + '+' + (s_delta / (2 * a)).toFixed(5) + 'i, x2=' + ((-b) / (2 * a)).toFixed(5) + '-' + (s_delta / (2 * a)).toFixed(5) + 'i')
+    console.log('x1=' + ((-b) / (2 * a)).toFixed(5) + '+' + (s_delta / (2 * a)).toFixed(5) + 'i;x2=' + ((-b) / (2 * a)).toFixed(5) + '-' + (s_delta / (2 * a)).toFixed(5) + 'i')
   }
 </script>
 <script xtype="x" id="ch0104/21">
@@ -762,7 +769,7 @@
 </script>
 <script xtype="x" id="ch0105/01">
   // 01：求平均年龄
-  var sum_age = 0;  // 年龄之和
+  var sum_age = 0;
   var n = Number(prompt('输入学生个数:'))
   while (n < 1 || n > 100) {
     alert('学生个数1到100个')
@@ -776,7 +783,7 @@
     }
     sum_age += age;
   }
-  console.log(sum_age / n).toFixed(2)
+  console.log((sum_age / n).toFixed(2))
 </script>
 <script xtype="x" id="ch0105/02">
   // 02: 财务管理
@@ -806,14 +813,14 @@
       }
     } else {
       var num = Number(prompt('输入第' + (i + 1) + '个数'))
-      while(num % 1 === 0 || Math.abs(num) > 1000) {
+      while(Math.abs(num) > 1000) {
         alert('输入一个绝对值不超过1000的浮点数')
         num = Number(prompt('输入第' + (i + 1) + '个数'))
       }
     }
     sum += num
   }
-  console.log(sum.toFixed(4));
+  console.log((sum / n).toFixed(4));
 </script>
 <script xtype="x" id="ch0105/04">
   // 04: 求整数的和与均值
@@ -950,7 +957,6 @@
   if(m % 17 !== 0) {
     m = Math.ceil(m / 17) * 17
   }
-  console.log(m,n)
   for(var i = m; i <= n; i += 17) {
     sum += i
   }
@@ -1192,7 +1198,7 @@
 </script>
 <script xtype="x" id="ch0105/20">
   // 20:球弹跳高度的计算
-  var distance = 0 // 经过的路程
+  var distance = 0
   var h = Number(prompt('输入初始高度h'))
   while ( h <= 0 || h % 1 !== 0) {
     alert('输入一个正整数')
@@ -1206,6 +1212,6 @@
     }
     h /= 2
   }
-  console.log(distance)
-  console.log(h)
+  console.log(distance.toFixed(4))
+  console.log(h.toFixed(7))
 </script>
