@@ -499,17 +499,24 @@
     alert('输入一个大于-1000000小于1000000的整数')
     n = Number(prompt('输入数字n '))
   }
-  var fn = function (n, d) {
-    if (n % d === 0) {
-      if(str.length > 0) {
-        str += ' '
-      }
-      str += d
-    }
+  if (n % 3 === 0) {
+    str += 3
   }
-  fn(n, 3)
-  fn(n, 5)
-  fn(n, 7)
+  if (n % 5 === 0) {
+    if (str.lenght > 0) {
+      str += ' '
+    }
+    str += 5
+  }
+  if (n % 7 === 0) {
+    if (str.lenght > 0) {
+      str += ' '
+    }
+    str += 7
+  }
+  if (!str) {
+    str = 'n'
+  }
   console.log(str)
 </script>
 <script xtype="x" id="ch0104/10">
@@ -587,7 +594,6 @@
   console.log((fn(N)).toFixed(3))
 </script>
 <script xtype="x" id="ch0104/14">
-  // debugger
   // 14:计算邮资
   var fee = 8
   var n = Number(prompt('输入重量n '))
@@ -665,7 +671,6 @@
   // 18:点和正方形的关系
   var key = 'yes'
   for (var i = 0; i < 2; i++) {
-    var str = i ? 'y' : 'x'
     var n = Number(prompt('输入坐标' + str))
     while (isNaN(n)) {
       alert('输入一个数')
@@ -686,25 +691,24 @@
     a = Number(prompt('输入a '))
   }
   var b = Number(prompt('输入b '))
-  while (b % 1 !== 0) {
-    alert('输入一个整数')
-    b = Number(prompt('输入b '))
-  }
   var c = prompt('输入c ')
   var key = (c === '+' || c === '-' || c === '*' || c === '/') ? true : false
-  while (!key) {
-    alert('输入+,-,*,/中的一个')
-    c = prompt('输入c ')
-    key = (c === '+' || c === '-' || c === '*' || c === '/') ? true : false
-  }
-  if (c === '+') {
-    console.log(a + b)
-  } else if (c === '-') {
-    console.log(a - b)
-  } else if (c === '*') {
-    console.log(a * b)
-  } else if (c === '/') {
-    console.log(a / b)
+  if (b === 0) {
+    console.log('Divided by zero!')
+  } else {
+    if (!key) {
+      console.log('Invalid operator!')
+    } else {
+      if (c === '+') {
+        console.log(a + b)
+      } else if (c === '-') {
+        console.log(a - b)
+      } else if (c === '*') {
+        console.log(a * b)
+      } else if (c === '/') {
+        console.log(a / b)
+      }
+    }
   }
 </script>
 <script xtype="x" id="ch0104/20">
@@ -1164,8 +1168,8 @@
 </script>
 <script xtype="x"  id="ch0105/19">
   // 19:救援
-  var minutes = 0   // 总时间  
-  var length = 0    // 路程
+  var minutes = 0
+  var length = 0
   var n = Number(prompt('输入屋顶数目n'))
   while (n < 0 || n % 1 !== 0) {
     alert('输入大于2的整数')
