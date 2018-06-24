@@ -1,0 +1,49 @@
+<meta charset="utf-8">
+<script xtype="x">
+  /**
+   * 作业：
+   * 实现评委打分
+   * 首先，询问用户有多少个评委
+   * 然后输入每个评委的评分
+   * 然后去掉一个最高分，去掉一个最低分，求剩余的平均分
+   */
+
+  var min = Infinity
+  var max = -Infinity
+  var sum = 0;
+  var num = Number(prompt('有几个评委'))
+  while (num < 4) {
+    alert('至少4个评委')
+    num = Number(prompt('有几个评委'))
+  } 
+
+  for (var i = 0; i < num; i++) {
+    var score = Number(prompt('第' + (i + 1) + '个评委打分:'));
+    sum += score;
+    if (score > max) {
+      max = score
+    }
+    if (score < min) {
+      min = score
+    }
+  }
+  var average = (sum - max - min) / (num - 2)
+  console.log('平均分:' + average)
+</script>
+<script type="x">
+  /**
+   * 如果没有%符号
+   * 你如何判断一个
+   * 数能否被另一个
+   * 数整除呢？
+   */
+  var isDivided = function (num1, num2) {
+    var quotient  = Math.floor(num1 / num2)
+    if (num1 - quotient * num2 === 0) {
+      return true;
+    }
+    return false;
+  }
+
+  console.log(isDivided(prompt('被除数:'),prompt('除数:')));
+</script>

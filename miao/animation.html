@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+    }
+    div,p{
+      width: 500px;
+      margin: 0 auto;
+      font-size: 40px;
+      text-align: center;
+    }
+
+
+    .bounce-out {
+      animation: bounce-out 1s linear 0s 1;
+    }
+
+    @keyframes bounce-out {
+      20% {transform: scale(0.8);}
+      40% {transform: scale(1);}
+      100% {transform: scale(0);}
+    }
+
+    .zoom-in-down {
+      animation-name: zoom-in-down;
+      animation-duration: 1s;
+      animation-timing-function: linear;
+      xanimation-fill-mode: forwards;
+    }
+    @keyframes zoom-in-down {
+      0%{
+        transform: translatey(-300px) scale(0);
+      }
+      10%{
+        transform: translatey(-300px) scale(0.3);
+      }
+      20%{
+        transform: translatey(-350px) scale(0.4);
+      }
+      40%{
+        transform: translatey(-200px) scale(0.6);
+      }
+      80%{
+        transform: translatey(0) scale(0.8);
+      }
+      82%{
+        transform: translatey(40px) scale(0.8);
+      }
+      90%{
+        transform: translatey(0) scale(1);
+      }
+    }
+
+    .rotate-out-down-left {
+      transform-origin: bottom left;
+      animation: route-out-down-left 1s linear 0s 1;
+    }
+    @keyframes route-out-down-left {
+      100% {
+        transform: rotatez(30deg);
+        opacity: 0;
+      }
+    }
+
+    .slide-out-up {
+      animation: slide-out-up 1s linear 0s 1;
+    }
+    @keyframes slide-out-up {
+      90% {
+        transform: translatey(-100px);
+        opacity: 0;
+      }
+    }
+
+    body {
+    }
+    .flip-flip-flip {
+      width: 240px;
+      perspective: 1000px;
+      transform-style: preserve-3d;
+      transform-origin: 100px left;
+      animation: flip-flip-flip 1s linear 0s;
+    }
+    @keyframes flip-flip-flip{
+      0%{
+        transform: rotatey(-70deg);
+      }
+
+      50% {
+        transform: rotatey(-359deg);
+      }
+    }
+
+  </style>
+</head>
+<body>
+<p>bounce-out</p>
+<p>zoom-in-down</p>
+<p>rotate-out-down-left</p>
+<p>slide-out-up</p>
+<p>flip-flip-flip</p>
+</body>
+</html>

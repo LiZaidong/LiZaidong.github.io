@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+    }
+    section {
+      height: 100px;
+      display: flex;
+      margin: 10px 0;
+    }
+
+    .pink {
+      background-color: pink;
+    }
+    .tan {
+      background-color: tan;
+    }
+    .aqua {
+      background-color: aqua;
+    }
+
+    /* 词典 */
+    .dictionary div:nth-child(1) {
+      width: 100px;
+    }
+    .dictionary div:nth-child(2) {
+      flex-grow: 1;
+    }
+    .dictionary div:nth-child(3) {
+      width: 200px;
+    }
+
+    .email {
+      flex-wrap: wrap;
+    }
+    .email header {
+      width: 100%;
+    }
+    .email aside {
+      width: 200px;
+    }
+    .email main {
+      flex-grow: 1;
+    }
+
+    .holy {
+      flex-wrap: wrap;
+    }
+    .holy div {
+      border: 1px solid;
+    }
+    .holy header, .holy footer{
+      width: 100%;
+    }
+    .holy div:nth-of-type(1) {
+      width: 100px;
+    }
+    .holy div:nth-of-type(2){
+      flex-grow: 1;
+    }
+    .holy div:nth-of-type(3) {
+      width: 200px;
+    }
+
+    .multiple-column {
+      height: auto;
+      /* flex-wrap: wrap; */
+    }
+    .multiple-column div:nth-child(1) p {
+      width: 100px;
+    }
+    .multiple-column div:nth-child(2) {
+      flex-grow: 1;
+    }
+    .multiple-column div:nth-child(3) p{
+      width: 200px;
+    }
+
+    [class*="boot-"] {
+      height: auto;
+    }
+    [class*="boot-"]>* {
+      border: 1px solid;
+      box-sizing: border-box;
+    }
+    [class*="boot-"] span {
+      font-size: 20px;
+      padding: 0 10px;
+    }
+    [class*="boot-"] input {
+      flex-grow: 1;
+      padding-left: 10px;
+    }
+    [class*="boot-"] .left {
+      border-top-left-radius: 4px;
+      border-bottom-left-radius: 4px;
+    }
+    [class*="boot-"] .center{
+      border: none;
+      border-top: 1px solid;
+      border-bottom: 1px solid;
+    }
+    [class*="boot-"] .right{
+      border-left: none;
+      border-top-right-radius: 4px;
+      border-bottom-right-radius: 4px;
+    }
+  </style>
+</head>
+<body>
+<!--
+flex布局实现
+  词典，
+  qq邮箱，
+  圣杯，
+  多栏等高自适应，
+  Bootstrap input
+  addon布局。
+  自适应正方形阵列布局
+-->
+
+<section class="dictionary">
+  <div class="pink">词典</div>
+  <div class="tan"></div>
+  <div class="aqua"></div>
+</section>
+<section class=email>
+  <header class="pink">qq邮箱</header>
+  <aside class="tan"></aside>
+  <main class="aqua"></main>
+</section>
+<section class="holy">
+  <header class="pink">圣杯</header>
+  <div class="tan">Lorem ipsum.</div>
+  <div class="tan"></div>
+  <div class="tan"></div>
+  <footer class="aqua"></footer>
+</section>
+<section class="multiple-column">
+  <div class="pink">
+    <p>多栏等高 Lorem ipsum dolor sit.</p>
+  </div>
+  <div class="tan">
+    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusamus, accusantium!</p>
+  </div>
+  <div class="aqua">
+    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ex pariatur necessitatibus aliquam dolore, dolorum quis? Dolorem qui repudiandae ducimus reiciendis.
+    </p>
+  </div>
+</section>
+<section class="boot-left">
+  <span class="pink left">@</span>
+  <input class="right" type="text" placeholder="输入邮箱">
+</section>
+<section class="boot-right">
+  <input class="left" type="text" placeholder="输入邮箱">
+  <span class="pink right">@</span>
+</section>
+<section class="boot-right">
+  <span class="tan left">23432asdfd</span>
+  <input class="center" type="text" placeholder="输入邮箱">
+  <span class="pink right">@</span>
+</section>
+<section class="square-matrix">
+  <div></div>
+  <div></div>
+  <div></div>
+  <div></div>
+  <div></div>
+  <div></div>
+  <div></div>
+  <div></div>
+  <div></div>
+</section>
+</body>
+</html>
