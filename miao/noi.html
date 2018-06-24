@@ -207,11 +207,14 @@
     n = Number(prompt('输入一个三位数'))
   }
   digit = Math.abs(n) % 10
-  ten = Math.floor(Math.abs(n) % 100 / 10)
+  ten = Math.floor(Math.abs(n) / 10 % 10)
   hundred = Math.floor(Math.abs(n) / 100)
-  reverse = digit * 100 + ten * 10 + hundred
+  digit = digit ? (digit + '') : '0'
+  ten = ten ? (ten + '') : '0'
+  hundred = hundred ? (hundred + '') : '0'
+  reverse = digit + ten + hundred
   if (n < 0) {
-    console.log(-reverse)
+    console.log('-' + reverse)
   } else {
     console.log(reverse)
   }
