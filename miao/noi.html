@@ -1198,22 +1198,6 @@
 </script>
 <script xtype="x" id="ch0105/20">
   // 20:球弹跳高度的计算
-  var distance = 0 // 经过的路程
-  var h = Number(prompt('输入初始高度h'))
-  while ( h <= 0 || h % 1 !== 0) {
-    alert('输入一个正整数')
-    h = Number(prompt('输入初始高度h'))
-  }
-  for (var i = 0; i < 10; i++) {
-    if(i === 0) {
-      distance += h
-    } else {
-      distance += h * 2
-    }
-    h /= 2
-  }
-  console.log(distance)
-  console.log(h)
   var distance = 0
   var h = Number(prompt('输入初始高度h'))
   while ( h <= 0 || h % 1 !== 0) {
