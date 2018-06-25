@@ -1106,14 +1106,13 @@
 <script xtype="x" id="ch0105/17">
   // 17:菲波那契数列
   var prev = 1
-  var prev_prev = 1
   var current = 1
   var k = Number(prompt('输入k'))
   while (k < 1 || k > 46 || k % 1 !== 0) {
     alert('输入1到46之间的整数')
     k = Number(prompt('输入k'))
   }
-  for (var i = 1; i < k; i++) {
+  for (var i = 1; i < k - 1; i++) {
     current = current + prev
     prev = current - prev
   }
@@ -1219,7 +1218,7 @@
 <script id="sort" sample-input="4 1 7" sample-output="1 4 7" comment="输入三个数，把此三个数按升序输出">
   
 </script>
-<script type="x" id="narcissistic " sample-input="153" sample-output="YES" comment="判断一个数是否为水仙花数">
+<script id="narcissistic " sample-input="153" sample-output="YES" comment="判断一个数是否为水仙花数">
   var a = prompt('数字')
   var sum = 0
   for (var i = 0; i < a.length; i++) {
@@ -1230,7 +1229,7 @@
   }
 
 </script>
-<script type="x" id="narcissistics" sample-input="" sample-output="" comment="找出100到10000以内所有的水仙花数">
+<script id="narcissistics" sample-input="" sample-output="" comment="找出100到10000以内所有的水仙花数">
   for (var i = 100; i < 10000; i++) {
     if (i % 10 === 0) {
       continue
@@ -1246,9 +1245,7 @@
     }
   }
 </script>
-<script type="x" id="palindrom" sample-input="12321" sample-output="YES" comment="判断一个非负整数是否为回文数字">
-  // 题目：判断一个非负整数是否为回文数字，回文是指从左往右与从右往左读是一样的。
-//例如：12321是回文数。12344321也是回文数。
+<script id="palindrom" sample-input="12321" sample-output="YES" comment="判断一个非负整数是否为回文数字">
   var a = prompt('数字')
   var key = true
   for (var i = 0; i < a.length; i++) {
@@ -1259,10 +1256,7 @@
   }
   console.log(key)
 </script>
-<script type="x" id="weekday" sample-input="2018 6" sample-output="5" comment="输入年份与月份，给出该年该月的第一天是星期几">
-// 题目：输入年份与月份，给出该年该月的第一天是星期几。
-//例如，输入2016年，11月，输出“星期2”
-//为了简化复杂性，可以只考虑2000年以后的时间。做为参考，2000年的1月1日是星期六。
+<script id="weekday" sample-input="2018 6" sample-output="5" comment="输入年份与月份，给出该年该月的第一天是星期几">
   function isLeapYear (y) {
     if (y % 3000 === 0) {
       return false
@@ -1298,7 +1292,7 @@
   day = (day + 6 + 1) % 7
   console.log(day)
 </script>
-<script type="x" id="complete-number" sample-input="6" sample-output="YES" comment="判断一个数是否为完全数">
+<script id="complete-number" sample-input="6" sample-output="YES" comment="判断一个数是否为完全数">
   var a = Number(prompt('数字'))
   sum = 0
   for (var i = 0; i < a; i++) {
@@ -1310,7 +1304,7 @@
     console.log('YES')
   }
 </script>
-<script type="x" id="complete-numbers" sample-input="" sample-output="" comment="输出10000以内所有的完全数">
+<script id="complete-numbers" sample-input="" sample-output="" comment="输出10000以内所有的完全数">
   for (var i = 0; i <= 10000; i++) {
     var sum = 0
     for(var j = 0; j < i; j++) {
@@ -1323,7 +1317,7 @@
     }
   }
 </script>
-<script type="x" id="prime" sample-input="7" sample-output="YES" comment="判断一个数是否为素数">
+<script id="prime" sample-input="7" sample-output="YES" comment="判断一个数是否为素数">
   var a = Number(prompt('数字'))
   var key = false
   for (var i = 2; i < a / 2; i++) {
@@ -1337,7 +1331,7 @@
   key = key ? 'YES' : 'NO'
   console.log(key)
 </script>
-<script type="x" id="primes" sample-input="" sample-output="" comment="输出100以内所有的素数">
+<script id="primes" sample-input="" sample-output="" comment="输出100以内所有的素数">
   for (var i = 0; i <= 100; i++) {
     var key = false
     if (i === 2) {
@@ -1359,7 +1353,7 @@
 <script id="itob" sample-input="123" sample-output="123" comment="数字转换成字符串">
   
 </script>
-<script type="x" id="lcf&lcm" sample-input="12 9" sample-output="36 3" comment="给定两个数，求它们的最小公倍数和最大公约数">
+<script id="lcf&lcm" sample-input="12 9" sample-output="36 3" comment="给定两个数，求它们的最小公倍数和最大公约数">
   var min = 1
   var max = 1
   var a = Number(prompt('数字'))
@@ -1381,7 +1375,7 @@
   }
   console.log(min, max)
 </script>
-<script type="x" id="7" sample-input="" sample-output="" comment="敲7">
+<script id="7" sample-input="" sample-output="" comment="敲7">
   for(var i = 1; i <= 100; i++) {
     if (i < 10) {
       if (i === 7) {
