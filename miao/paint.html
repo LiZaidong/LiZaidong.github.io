@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
   <meta charset="UTF-8">
   <title>画图</title>
@@ -42,10 +42,10 @@
     dot(i + 1, 30)
   }
   // 画一条三个实点两个空点的虚线
-  for (var i = 0; i <= width; i = i + 5) {
-    dot(i, 40)
-    dot(i + 1, 40)
-    dot(i + 2, 40)
+  for (var i = 0; i <= width; i++) {
+    if (i % 5 < 3) {
+      dot(i, 40)
+    }
   }
   // 画一条45度的斜线
   for (var i = 0; i <= height; i++) {
@@ -73,10 +73,24 @@
     }
   }
 
-  //画一个空心的圆
-  for (var i = 0; i <= 360; i += 1) {
-    dot(100 + 50 * Math.sin(Math.PI / 180 * i)
-, 100 + 50 * Math.cos(Math.PI / 180 * i))
+  // 画一个空心的圆
+  for (var i = 0; i <= 360; i++) {
+    var x = Math.cos(Math.PI / 180 * i)
+    var y = Math.sin(Math.PI / 180 * i)
+    dot(100 + 50 * x, 100 + 50 * y)
+  }
+
+  // 画一个正弦曲线
+  for (var j = 0; j < 400; j += 100) {
+    for (var i = 0; i <= 180; i++) {
+      var x = Math.cos(Math.PI / 180 * i)
+      var y = Math.sin(Math.PI / 180 * i)
+      if (j % 200 === 0) {
+        dot(50 + j + 50 * x, 150 - 50 * y)
+      } else {
+        dot(50 + j + 50 * x, 150 + 50 * y)
+      }
+    }
   }
 </script>
 </html>

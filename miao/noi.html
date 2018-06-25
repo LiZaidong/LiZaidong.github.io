@@ -210,10 +210,7 @@
   digit = Math.abs(n) % 10
   ten = Math.floor(Math.abs(n) / 10 % 10)
   hundred = Math.floor(Math.abs(n) / 100)
-  digit = digit ? (digit + '') : '0'
-  ten = ten ? (ten + '') : '0'
-  hundred = hundred ? (hundred + '') : '0'
-  reverse = digit + ten + hundred
+  reverse = '' + digit + ten + hundred
   if (n < 0) {
     console.log('-' + reverse)
   } else {
@@ -575,23 +572,20 @@
 </script>
 <script xtype="x" id="ch0104/13">
   // 13:分段函数
-  var N = Number(prompt('输入浮点数N '))
-  while (N < 0 || N >= 20) {
+  var x = Number(prompt('输入浮点数x '))
+  while (x < 0 || x >= 20) {
     alert('输入一个大于等于0小于20的数')
-    N = Number(prompt('输入浮点数N '))
+    x = Number(prompt('输入浮点数x '))
   }
-  var fn = function (x) {
-    var y = 0
-    if (x >= 0 && x < 5) {
-      y = -x + 2.5
-    } else if (x >= 5 && x < 10) {
-      y = 2 - 1.5 * (x - 3) * (x - 3)
-    } else {
-      y = x / 2 - 1.5
-    }
-    return y
+  y = 0
+  if (x >= 0 && x < 5) {
+    y = -x + 2.5
+  } else if (x < 10) {
+    y = 2 - 1.5 * (x - 3) * (x - 3)
+  } else {
+    y = x / 2 - 1.5
   }
-  console.log((fn(N)).toFixed(3))
+  console.log((y).toFixed(3))
 </script>
 <script xtype="x" id="ch0104/14">
   // 14:计算邮资
@@ -657,14 +651,16 @@
     alert('输入一个大于0小于3000的整数')
     a = Number(prompt('输入年份a '))
   }
-  if (a % 400 === 0) {
+  if (a % 3200 === 0) {
+    console.log('Y')
+  } else if (a % 400 === 0) {
+    console.log('Y')
+  } else if (a % 100 === 0) {
+    console.log('N')
+  } else if (a % 4 === 0) {
     console.log('Y')
   } else {
-    if (a % 4 === 0) {
-      console.log('Y')
-    } else {
-      console.log('N')
-    }
+    console.log('N')
   }
 </script>
 <script xtype="x" id="ch0104/18">
@@ -1081,7 +1077,7 @@
   // 16:买房子
   var count = 1
   var price = 200
-  var sum = 0  //工资和
+  var sum = 0
   var N = Number(prompt('输入N'))
   while (N < 10 || N > 50 || N % 1 !== 0) {
     alert('输入10到50之间的整数')
@@ -1111,17 +1107,17 @@
   // 17:菲波那契数列
   var prev = 1
   var prev_prev = 1
+  var current = 1
   var k = Number(prompt('输入k'))
   while (k < 1 || k > 46 || k % 1 !== 0) {
     alert('输入1到46之间的整数')
     k = Number(prompt('输入k'))
   }
-  for (var i = 3; i < k; i++) {
-    var tmp = prev
-    prev = prev_prev + prev
-    prev_prev = tmp
+  for (var i = 1; i < k; i++) {
+    current = current + prev
+    prev = current - prev
   }
-  console.log(prev+prev_prev)
+  console.log(current)
 </script>
 <script xtype="x" id="ch0105/18">
   // 18:鸡尾酒疗法
@@ -1219,4 +1215,187 @@
   }
   console.log(distance.toFixed(4))
   console.log(h.toFixed(7))
+</script>
+<script id="sort" sample-input="4 1 7" sample-output="1 4 7" comment="输入三个数，把此三个数按升序输出">
+  
+</script>
+<script type="x" id="narcissistic " sample-input="153" sample-output="YES" comment="判断一个数是否为水仙花数">
+  var a = prompt('数字')
+  var sum = 0
+  for (var i = 0; i < a.length; i++) {
+    sum += Math.pow(a[i], a.length)
+  }
+  if (sum === Number(a)) {
+    console.log('YES')
+  }
+
+</script>
+<script type="x" id="narcissistics" sample-input="" sample-output="" comment="找出100到10000以内所有的水仙花数">
+  for (var i = 100; i < 10000; i++) {
+    if (i % 10 === 0) {
+      continue
+    } else {
+      var sum = 0
+      num = String(i)
+      for (var j = 0; j < num.length; j++) {
+        sum += Math.pow(num[j], num.length)
+      }
+    }
+    if (sum === i) {
+      console.log(i)
+    }
+  }
+</script>
+<script type="x" id="palindrom" sample-input="12321" sample-output="YES" comment="判断一个非负整数是否为回文数字">
+  // 题目：判断一个非负整数是否为回文数字，回文是指从左往右与从右往左读是一样的。
+//例如：12321是回文数。12344321也是回文数。
+  var a = prompt('数字')
+  var key = true
+  for (var i = 0; i < a.length; i++) {
+    if(a[i] !== a[a.length - 1 -i]) {
+      key = false
+      break
+    }
+  }
+  console.log(key)
+</script>
+<script type="x" id="weekday" sample-input="2018 6" sample-output="5" comment="输入年份与月份，给出该年该月的第一天是星期几">
+// 题目：输入年份与月份，给出该年该月的第一天是星期几。
+//例如，输入2016年，11月，输出“星期2”
+//为了简化复杂性，可以只考虑2000年以后的时间。做为参考，2000年的1月1日是星期六。
+  function isLeapYear (y) {
+    if (y % 3000 === 0) {
+      return false
+    } else if (y % 400 === 0) {
+      return true
+    } else if (y % 100 === 0) {
+      return false
+    } else if (y % 4 === 0) {
+      return true
+    } else {
+      return false
+    }
+  }
+  var y = prompt('年份')
+  var m = prompt('月份')
+  var remainder = 365 % 7
+  var day = 6
+  for(var i = 2000; i < y; i++) {
+    day += isLeapYear(i) ? (remainder + 1) : remainder
+  }
+
+  for(var i = 1; i < m; i++) {
+    if (i === 2) {
+      day += isLeapYear(y) ? (remainder) : 0
+    } else {
+      if (i < 8) {
+        day += i % 2 === 0 ? (30 % 7) : (31 % 7)
+      } else {
+        day += i % 2 === 0 ? (31 % 7) : (30 % 7)
+      }
+    }
+  }
+  day = (day + 6 + 1) % 7
+  console.log(day)
+</script>
+<script type="x" id="complete-number" sample-input="6" sample-output="YES" comment="判断一个数是否为完全数">
+  var a = Number(prompt('数字'))
+  sum = 0
+  for (var i = 0; i < a; i++) {
+    if (a % i === 0) {
+      sum += i
+    }
+  }
+  if (sum === a) {
+    console.log('YES')
+  }
+</script>
+<script type="x" id="complete-numbers" sample-input="" sample-output="" comment="输出10000以内所有的完全数">
+  for (var i = 0; i <= 10000; i++) {
+    var sum = 0
+    for(var j = 0; j < i; j++) {
+      if (i % j === 0) {
+        sum += j
+      }
+    }
+    if (sum === i) {
+      console.log(i)
+    }
+  }
+</script>
+<script type="x" id="prime" sample-input="7" sample-output="YES" comment="判断一个数是否为素数">
+  var a = Number(prompt('数字'))
+  var key = false
+  for (var i = 2; i < a / 2; i++) {
+    if (a % i === 0) {
+      key = false
+      break
+    } else {
+      key = true
+    }
+  }
+  key = key ? 'YES' : 'NO'
+  console.log(key)
+</script>
+<script type="x" id="primes" sample-input="" sample-output="" comment="输出100以内所有的素数">
+  for (var i = 0; i <= 100; i++) {
+    var key = false
+    if (i === 2) {
+      console.log(2)
+    }
+    for (var j = 2; j < i; j++) {
+      if (i % j === 0) {
+        key = false
+        break
+      } else {
+        key = true
+      }
+    }
+    if (key) {
+      console.log(i)
+    }
+  }
+</script>
+<script id="itob" sample-input="123" sample-output="123" comment="数字转换成字符串">
+  
+</script>
+<script type="x" id="lcf&lcm" sample-input="12 9" sample-output="36 3" comment="给定两个数，求它们的最小公倍数和最大公约数">
+  var min = 1
+  var max = 1
+  var a = Number(prompt('数字'))
+  var b = Number(prompt('数字'))
+  if (a % b === 0 || b % a ===0) {
+    min = a > b ? a : b
+    max = a > b ? b : a
+  } else {
+    var big = a > b ? a : b
+    var small = a > b ? b :a
+    for (var i = 0; i < big; i++) {
+      if (big % i === 0) {
+        if (small % i === 0) {
+          max *= i
+        }
+      }
+    }
+    min = (a / max) * (b / max) * max
+  }
+  console.log(min, max)
+</script>
+<script type="x" id="7" sample-input="" sample-output="" comment="敲7">
+  for(var i = 1; i <= 100; i++) {
+    if (i < 10) {
+      if (i === 7) {
+        console.log(7)
+      }
+    } else if (i < 100) {
+      var digit = i % 10
+      var ten = (i - digit) / 10
+      if (digit === 7 || ten === 7 || i % 7 === 0) {
+        console.log(i)
+      }
+    }
+  }
+</script>
+<script id="sqrt" sample-input="2" sample-output="1.414" comment="不使用Math.sqrt，求一个非负数的平方根，至少精确到小数点后3位">
+  
 </script>
