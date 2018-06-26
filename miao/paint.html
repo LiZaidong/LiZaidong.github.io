@@ -81,16 +81,9 @@
   }
 
   // 画一个正弦曲线
-  for (var j = 0; j < 400; j += 100) {
-    for (var i = 0; i <= 180; i++) {
-      var x = Math.cos(Math.PI / 180 * i)
-      var y = Math.sin(Math.PI / 180 * i)
-      if (j % 200 === 0) {
-        dot(50 + j + 50 * x, 150 - 50 * y)
-      } else {
-        dot(50 + j + 50 * x, 150 + 50 * y)
-      }
-    }
+  for (var i = 0; i < 400; i += 0.01) {
+    var y = Math.sin(i) * 25
+    dot(i * 25, y)
   }
 </script>
 </html>
