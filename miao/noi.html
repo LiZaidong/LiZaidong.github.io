@@ -1216,7 +1216,21 @@
   console.log(h.toFixed(7))
 </script>
 <script id="sort" sample-input="4 1 7" sample-output="1 4 7" comment="输入三个数，把此三个数按升序输出">
-  
+  var a = Number(prompt("第一个数"))
+  var b = Number(prompt("第二个数"))
+  var c = Number(prompt("第三个数"))
+  var tmp = 0
+  if (a > b){
+    tmp = b
+    b = a
+    a = tmp
+  }
+  if (b > c){
+    tmp = c
+    c = b
+    b = tmp
+  }
+  console.log(a + ' ' + b + ' ' + c)
 </script>
 <script id="narcissistic " sample-input="153" sample-output="YES" comment="判断一个数是否为水仙花数">
   var a = prompt('数字')
@@ -1280,7 +1294,7 @@
 
   for(var i = 1; i < m; i++) {
     if (i === 2) {
-      day += isLeapYear(y) ? (remainder) : 0
+      day += isLeapYear(y) ? remainder : 0
     } else {
       if (i < 8) {
         day += i % 2 === 0 ? (30 % 7) : (31 % 7)
@@ -1319,30 +1333,23 @@
 </script>
 <script id="prime" sample-input="7" sample-output="YES" comment="判断一个数是否为素数">
   var a = Number(prompt('数字'))
-  var key = false
-  for (var i = 2; i < a / 2; i++) {
+  var key = true
+  for (var i = 2; i <= a / 2; i++) {
     if (a % i === 0) {
       key = false
       break
-    } else {
-      key = true
     }
   }
   key = key ? 'YES' : 'NO'
   console.log(key)
 </script>
 <script id="primes" sample-input="" sample-output="" comment="输出100以内所有的素数">
-  for (var i = 0; i <= 100; i++) {
-    var key = false
-    if (i === 2) {
-      console.log(2)
-    }
-    for (var j = 2; j < i; j++) {
+  for (var i = 2; i <= 100; i++) {
+    var key = true
+    for (var j = 2; j <= i / 2; j++) {
       if (i % j === 0) {
         key = false
         break
-      } else {
-        key = true
       }
     }
     if (key) {
@@ -1351,7 +1358,6 @@
   }
 </script>
 <script id="itob" sample-input="123" sample-output="123" comment="数字转换成字符串">
-  
 </script>
 <script id="lcf&lcm" sample-input="12 9" sample-output="36 3" comment="给定两个数，求它们的最小公倍数和最大公约数">
   var min = 1
@@ -1362,11 +1368,9 @@
     min = a > b ? a : b
     max = a > b ? b : a
   } else {
-    var big = a > b ? a : b
-    var small = a > b ? b :a
-    for (var i = 0; i < big; i++) {
-      if (big % i === 0) {
-        if (small % i === 0) {
+    for (var i = 0; i < a; i++) {
+      if (a % i === 0) {
+        if (b % i === 0) {
           max *= i
         }
       }
