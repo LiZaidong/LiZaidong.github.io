@@ -1225,6 +1225,11 @@
     b = a
     a = tmp
   }
+  if (a > c) {
+    tmp = c
+    c = a
+    a = tmp
+  } 
   if (b > c){
     tmp = c
     c = b
@@ -1240,6 +1245,8 @@
   }
   if (sum === Number(a)) {
     console.log('YES')
+  } else {
+    console.log('NO')
   }
 </script>
 <script id="narcissistics" sample-input="" sample-output="" comment="找出100到10000以内所有的水仙花数">
@@ -1308,8 +1315,8 @@
 </script>
 <script id="complete-number" sample-input="6" sample-output="YES" comment="判断一个数是否为完全数">
   var a = Number(prompt('数字'))
-  sum = 0
-  for (var i = 0; i < a; i++) {
+  sum = 1
+  for (var i = 2; i < a; i++) {
     if (a % i === 0) {
       sum += i
     }
@@ -1320,8 +1327,8 @@
 </script>
 <script id="complete-numbers" sample-input="" sample-output="" comment="输出10000以内所有的完全数">
   for (var i = 0; i <= 10000; i++) {
-    var sum = 0
-    for(var j = 0; j < i; j++) {
+    var sum = 1
+    for(var j = 2; j < i; j++) {
       if (i % j === 0) {
         sum += j
       }
@@ -1358,6 +1365,15 @@
   }
 </script>
 <script id="itob" sample-input="123" sample-output="123" comment="数字转换成字符串">
+  var a = Number(prompt('数字'))
+  var d = 0
+  var str = ''
+  do {
+    d = a % 2
+    a = (a - d) / 2
+    str = d + str
+  } while (a > 0)
+  console.log(str)
 </script>
 <script id="lcf&lcm" sample-input="12 9" sample-output="36 3" comment="给定两个数，求它们的最小公倍数和最大公约数">
   var min = 1
@@ -1395,5 +1411,137 @@
   }
 </script>
 <script id="sqrt" sample-input="2" sample-output="1.414" comment="不使用Math.sqrt，求一个非负数的平方根，至少精确到小数点后3位">
+  var a = prompt('数字')
+  var result = 1
+  for (var i = 0; i < 10;i++) {
+    result = (result + a / result) / 2
+  }
+  console.log(result.toFixed(3))
+</script>
+<script xtype="x">
+  /*
+  题目：分解质因数，把一个数分解为若干质数的乘积：
+12 = 2 * 2 * 3
+120 = 2 * 2 * 2 * 3 * 5
+1260 = 2 * 2 * 3 * 3 * 5 * 7
+  */
+  var separate = function (num) {
+    var d = 2
+    var str = num + ' = '
+    var count = 0
+    while (num > 1) {
+      if (isPrime(d)) {
+        if (num % d === 0) {
+          if (count === 0) {
+            str += d
+          } else {
+            str += ' * ' + d
+          }
+          num /= d
+        } else {
+          d++
+        }
+      } else {
+        d++
+      }
+      count++
+    }
+    return str
+
+    function isPrime (n) {
+      var sqrt_n = Math.sqrt(n);
+      for (var i = 2; i <= sqrt_n; i++) {
+        if (n % i === 0) {
+          return false
+        }
+      }
+      return true
+    }
+  }
+</script>
+<script>
+  // 题目：找出最小的能被1到20所有数整除的数。
+  // 232792560
+  // var divident = function () {
+  //   var product = 1
+  //   for (var i = 1; i <= 20; i++) {
+  //     if (product % i !== 0) {
+  //       product *= (1 / ((product / i) % 1))
+  //     }
+  //   }
+  //   return product
+  // }
+  var divident = function () {
+    var max = 1
+    for (var i = 2; i <= 20; i++) {
+      if (isPrime(i)) {
+        max *= i
+      } else {
+        if (max % i !== 0) {
+          max *= (1 / ((max / i) % 1))
+        }
+      }
+      max = Math.round(max)
+    }
+    return max
+    function isPrime (n) {
+      var sqrt_n = Math.sqrt(n)
+      for (var i = 2; i <= sqrt_n; i++) {
+        if (n % i === 0) {
+          return false
+        }
+      } 
+      return true
+    }
+  }
+</script>
+<script>
+  /*题目：将一个数字的各位加起来求和。如果该和大于10，将得到这个数字继续进行这种操作，直到其只有一位数。
+例如：459->4+6+9->19->1+9->10->1+0->1
+于是就输出1*/
+  var getSingle = function (n) {
+    while(n > 10){
+      var result = 0
+      while (n > 0) {
+        var d = 0
+        d = n % 10
+        n = (n - d) / 10
+        result += d
+      }
+      n = result
+    }
+    return n
+  }
+</script>
+<script>
+  /*题目：找出唯一的满足a + b + c = 1000的毕达哥拉斯三元组{a, b, c}。
+一个毕达哥拉斯三元组是一个包含三个自然数的集合，a<b<c，满足条件：
+a^2 + b^2 = c^2例如：3^2 + 4^2 = 9 + 16 = 25 = 5^2.（说白了就是一组勾股数）
+已知存在并且只存在一个毕达哥拉斯三元组满足条件a + b + c = 1000。
+找出这个三元组。
+题目中a^b代表a的b次方（这是一个通用表示法） 。*/
+// a=200, b=375 ,c=425
+// count=68359
+  var bdgsl = function () {
+    var count = 0
+    for (var a = 1; a <= 332; a++) {
+      for (var b = (a +1); b <= 554; b++) {
+        count++
+        if ((a + b) < (1000 - a -b)) {
+          continue
+        }
+        var sum = a + b + Math.sqrt(a*a+b*b)
+        console.log(a,b,sum)
+        if (sum > 1000) {
+          break
+        } else if (Math.floor(sum) === 1000) {
+          console.log('a=' + a + ', b=' + b + ' ,c=' + (1000 - a - b))
+          console.log('count=' + count)
+          return false
+        }
+      } 
+    }
+  }
   
+
 </script>

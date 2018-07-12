@@ -1,0 +1,284 @@
+<meta charset="utf-8">
+<script>
+// 作业：输入三个数，把此三个数按升序输出
+  {
+    // var a = prompt('数字')
+    // var b = prompt('数字')
+    // var c = prompt('数字')
+    // var str = ''
+    // if (a < b) {
+    //   str
+    // }
+  }
+
+/* 题目：
+    水仙花数。水仙花数是指一个N位的十进制数，其各位数的N次方的和等于它自己。
+    如：153 =　1的三次方+5的三次方+3的三次方，则153就是一个水仙花数
+或：1634 =　1的四次方+6的四次方+3的四次方+4的四次方
+因为1634是一个四位数。
+找出100到100000以内所有的水仙花数。
+*/
+// {
+//   for (var i = 100; i <= 100000; i++) {
+//     var str = String(i)
+//     var result = 0
+//     if (i % 10 === 0) {
+//       continue
+//     }
+//     for(var j = 0; j < str.length; j++) {
+//       if (str[j] === 0) {
+//         continue
+//       } else {
+//         // console.log(Math.pow(str[j], str[j]), result)
+//         var pow = Math.pow(str[j], str[j])
+//         // console.log(pow)
+//         result += pow
+//       }
+//     }
+//     if (result === i) {
+//       console.log(result)
+//     }
+//   }
+// }
+// 题目：在控制输出九九乘法表。
+  // var str = ''
+  // for (var i = 1; i < 10; i++) {
+  //   for (var j = 1; j <= i; j++) {
+  //     str += j + '*' + i + '=' + ('0' + i * j).slice(-2) + ' '
+  //   }
+  //   str += '\n'
+  // }
+  // console.log(str)
+
+
+// 题目：求s=a+aa+aaa+aaaa+aa...a的值，其中a是一个数字。例如2+22+222+2222+22222(此时共有5个数相加)，具体有几个数相加有通过输入或者函数的实际参数决定。
+  // var a = prompt('数字')
+  // var b = prompt('个数')
+  // var c = 0
+  // var d = ''
+  // for(var i = 0; i < b; i++) {
+  //   d += a
+  //   c += Number(d)
+  // }
+  // console.log(c)
+
+
+
+
+// 题目：完全数。如果一个数的所有小于它的约数之和等于它自己，则它是一个完全数，例如6（1，2，3都是它的约数，它们的和正好为6）。找出10000以内所有的完全数
+
+
+//给定M和N，求从M个物体中选出N个的排列与组合的数量：
+//Ｃ（ｍ，ｎ）
+//Ａ（ｍ，ｎ）
+
+
+// 题目：给定一个数，对其进行四舍五入，如1.4返回1，1.6返回2
+  // var a = prompt('数字')
+  // var num = 0
+  // if (a % 1 >= 0.5) {
+  //   num = a - a % 1 + 1
+  // } else {
+  //   num = a - a % 1
+  // }
+  // console.log(num)
+
+// 题目：把一个数字转换成字符串；当然不能使用String(123)了，也不能使用任意内置的方法比如：""+123
+
+
+// 题目：给定两个数，求它们的最小公倍数和最大公约数。
+  
+// 题目：敲7。输出1到100以内所有7的倍数以及数字中包含7的数，如7（7的倍数），37（不是倍数但数位中包含7）都需要输出，依次类推
+
+
+// 题目：不使用Math.sqrt，求一个非负数的平方根
+
+
+// 题目：判断一个数是否是素数。
+
+
+// 题目：输出100以内所有的素数。
+</script>
+<script id="sort" sample-input="4 1 7" sample-output="1 4 7" comment="输入三个数，把此三个数按升序输出">
+  
+</script>
+<script type="x" id="narcissistic " sample-input="153" sample-output="YES" comment="判断一个数是否为水仙花数">
+  var a = prompt('数字')
+  var sum = 0
+  for (var i = 0; i < a.length; i++) {
+    sum += Math.pow(a[i], a.length)
+  }
+  if (sum === Number(a)) {
+    console.log('YES')
+  }
+
+</script>
+<script type="x" id="narcissistics" sample-input="" sample-output="" comment="找出100到10000以内所有的水仙花数">
+  for (var i = 100; i < 10000; i++) {
+    if (i % 10 === 0) {
+      continue
+    } else {
+      var sum = 0
+      num = String(i)
+      for (var j = 0; j < num.length; j++) {
+        sum += Math.pow(num[j], num.length)
+      }
+    }
+    if (sum === i) {
+      console.log(i)
+    }
+  }
+</script>
+<script type="x" id="palindrom" sample-input="12321" sample-output="YES" comment="判断一个非负整数是否为回文数字">
+  // 题目：判断一个非负整数是否为回文数字，回文是指从左往右与从右往左读是一样的。
+//例如：12321是回文数。12344321也是回文数。
+  var a = prompt('数字')
+  var key = true
+  for (var i = 0; i < a.length; i++) {
+    if(a[i] !== a[a.length - 1 -i]) {
+      key = false
+      break
+    }
+  }
+  console.log(key)
+</script>
+<script type="x" id="weekday" sample-input="2018 6" sample-output="5" comment="输入年份与月份，给出该年该月的第一天是星期几">
+// 题目：输入年份与月份，给出该年该月的第一天是星期几。
+//例如，输入2016年，11月，输出“星期2”
+//为了简化复杂性，可以只考虑2000年以后的时间。做为参考，2000年的1月1日是星期六。
+  function isLeapYear (y) {
+    if (y % 3000 === 0) {
+      return false
+    } else if (y % 400 === 0) {
+      return true
+    } else if (y % 100 === 0) {
+      return false
+    } else if (y % 4 === 0) {
+      return true
+    } else {
+      return false
+    }
+  }
+  var y = prompt('年份')
+  var m = prompt('月份')
+  var remainder = 365 % 7
+  var day = 6
+  for(var i = 2000; i < y; i++) {
+    day += isLeapYear(i) ? (remainder + 1) : remainder
+  }
+
+  for(var i = 1; i < m; i++) {
+    if (i === 2) {
+      day += isLeapYear(y) ? (remainder) : 0
+    } else {
+      if (i < 8) {
+        day += i % 2 === 0 ? (30 % 7) : (31 % 7)
+      } else {
+        day += i % 2 === 0 ? (31 % 7) : (30 % 7)
+      }
+    }
+  }
+  day = (day + 6 + 1) % 7
+  console.log(day)
+</script>
+<script type="x" id="complete-number" sample-input="6" sample-output="YES" comment="判断一个数是否为完全数">
+  var a = Number(prompt('数字'))
+  sum = 0
+  for (var i = 0; i < a; i++) {
+    if (a % i === 0) {
+      sum += i
+    }
+  }
+  if (sum === a) {
+    console.log('YES')
+  }
+</script>
+<script type="x" id="complete-numbers" sample-input="" sample-output="" comment="输出10000以内所有的完全数">
+  for (var i = 0; i <= 10000; i++) {
+    var sum = 0
+    for(var j = 0; j < i; j++) {
+      if (i % j === 0) {
+        sum += j
+      }
+    }
+    if (sum === i) {
+      console.log(i)
+    }
+  }
+</script>
+<script type="x" id="prime" sample-input="7" sample-output="YES" comment="判断一个数是否为素数">
+  var a = Number(prompt('数字'))
+  var key = false
+  for (var i = 2; i < a / 2; i++) {
+    if (a % i === 0) {
+      key = false
+      break
+    } else {
+      key = true
+    }
+  }
+  key = key ? 'YES' : 'NO'
+  console.log(key)
+</script>
+<script type="x" id="primes" sample-input="" sample-output="" comment="输出100以内所有的素数">
+  for (var i = 0; i <= 100; i++) {
+    var key = false
+    if (i === 2) {
+      console.log(2)
+    }
+    for (var j = 2; j < i; j++) {
+      if (i % j === 0) {
+        key = false
+        break
+      } else {
+        key = true
+      }
+    }
+    if (key) {
+      console.log(i)
+    }
+  }
+</script>
+<script id="itob" sample-input="123" sample-output="123" comment="数字转换成字符串">
+  
+</script>
+<script type="x" id="lcf&lcm" sample-input="12 9" sample-output="36 3" comment="给定两个数，求它们的最小公倍数和最大公约数">
+  var min = 1
+  var max = 1
+  var a = Number(prompt('数字'))
+  var b = Number(prompt('数字'))
+  if (a % b === 0 || b % a ===0) {
+    min = a > b ? a : b
+    max = a > b ? b : a
+  } else {
+    var big = a > b ? a : b
+    var small = a > b ? b :a
+    for (var i = 0; i < big; i++) {
+      if (big % i === 0) {
+        if (small % i === 0) {
+          max *= i
+        }
+      }
+    }
+    min = (a / max) * (b / max) * max
+  }
+  console.log(min, max)
+</script>
+<script type="x" id="7" sample-input="" sample-output="" comment="敲7">
+  for(var i = 1; i <= 100; i++) {
+    if (i < 10) {
+      if (i === 7) {
+        console.log(7)
+      }
+    } else if (i < 100) {
+      var digit = i % 10
+      var ten = (i - digit) / 10
+      if (digit === 7 || ten === 7 || i % 7 === 0) {
+        console.log(i)
+      }
+    }
+  }
+</script>
+<script id="sqrt" sample-input="2" sample-output="1.414" comment="不使用Math.sqrt，求一个非负数的平方根，至少精确到小数点后3位">
+  
+</script>
