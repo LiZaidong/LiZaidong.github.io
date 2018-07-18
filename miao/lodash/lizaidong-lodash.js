@@ -40,9 +40,7 @@ var lizaidong = {
     }
     return res
   },
-  differenceWith (array, values, comparator) {
-
-  },
+  differenceWith (array, values, comparator) {},
   drop (array, n = 1) {
     return array.slice(n)
   },
@@ -167,11 +165,12 @@ var lizaidong = {
     const res = []
     let index = 0
     for (let i = 0; i < array[0].length; i++) {
+      index = 0
       for (let j = 1; j < array.length; j++) {
-        if (!lizaidong.includes(array[j], array[0][i])) {
+        if (!array[j].includes(array[0][i])) {
           break
         } else {
-          index = j
+          index++
         }
       }
       if (index === array.length - 1) {
@@ -205,7 +204,7 @@ var lizaidong = {
     return res
   },
   join (array, separator = ',') {
-    return array.reduce((p, c) => p + separator + c)
+    return array.reduce((prev, curr) => prev + '' + separator + curr)
   },
   last (array) {
     return array[array.length - 1]
@@ -228,7 +227,7 @@ var lizaidong = {
     return array[n]
   },
   pull (array, ...values) {
-    return array.filter(v => !this.includes(values, v))
+    return array.filter(v => !values.includes(v))
   },
   pullAll (array, values) {
     return array.filter(v => !this.includes(values, v))
@@ -260,11 +259,31 @@ var lizaidong = {
     return array
   },
   sortedIndex (array, value) {
+    if (value <= array[0]) return 0
+    if (value > array[array.length - 1]) return array.length
     for (let i = 0; i < array.length; i++) {
-      if (array[i] < value && array[i + 1] > value) {
+      if (array[i] === value) {
+        return i
+      }
+      if (array[i] < value && value < array[i + 1]) {
         return i + 1
       }
     }
+  },
+  sortedLastIndex (array, value) {
+    if (value <= array[0]) return 0
+    if (value > array[array.length - 1]) return array.length
+    for (let i = array.length - 1; i >= 0; i--) {
+      if (array[i] === value) {
+        return i
+      }
+      if (array[i] < value && value < array[i + 1]) {
+        return i + 1
+      }
+    }
+  },
+  sortedUniq (array) {
+    return this.uniq(array)
   },
   tail (array) {
     return this.slice(array, 1)
@@ -272,11 +291,71 @@ var lizaidong = {
   take (array, n = 1) {
     return this.slice(array, 0, n)
   },
-
-
-
-
-
+  takeRight (array, n = 1) {
+    if (n <= 0) {
+      n = array.length - n
+    } else {
+      n = -n
+    }
+    return this.slice(array, n)
+  },
+  union (...arrays) {
+    let ary = arrays.reduce((res, item) => {
+      res = res.concat(item)
+      return res
+    }, [])
+    return Array.from(new Set(ary))
+  },
+  uniq (array) {
+    return Array.from(new Set(array))
+  },
+  unzip (array) {
+    let res = []
+    let key = true
+    for (let i = 0; ; i++) {
+      if (!key) break
+      let temp = []
+      for (let j = 0; j < array.length; j++) {
+        temp[j] = array[j][i]
+      }
+      let isTure = temp.filter(item => item !== undefined)
+      if (isTure.length > 0) {
+        res.push(temp)
+      } else {
+        key = false
+      }
+    }
+    return res
+  },
+  unzipWith (array, iteratee = lizaidong.identity) {
+    let ary = this.unzip(array)
+    return  ary.map((item) => {
+      item = item.reduce((prev, curr) => {
+        return iteratee(prev, curr)
+      })
+      return item
+    })
+  },
+  zip (arrays) {
+    let res = []
+    for (let i = 0; i < arguments.length; i++) {
+      let temp = []
+      for (let j = 0; j < arguments.length; j++) {
+        temp[j] = arguments[j][i]
+      }
+      if (temp.length > 0) {
+        res.push(temp)
+      }
+    }
+    return res
+  },
+  zipObject (props, values) {
+    let map = {}
+    props.forEach((item, index) => {
+      map[item] = values[index]
+    })
+    return map
+  },
   isEqual (value, other) {
     if (value !== value && other !== other) {
       return true
@@ -342,8 +421,14 @@ var lizaidong = {
     return Object.prototype.toString.call(value) === '[object Array]'
   },
 
+  add (augend, addend) {
+    return augend + addend
+  },
   // 作业：用reduce实现map,filter,forEach,slice,fill,concat....
   map (collection, iteratee = lizaidong.identity) {},
+  filter (collection, iteratee = lizaidong.identity) {
+    return
+  },
   forEach (collection, iteratee = lizaidong.identity) {},
   slice (array, start = 0, end = array.length) {
     if (start < 0) start += array.length
@@ -367,10 +452,16 @@ var lizaidong = {
   },
   concat (array, ...values) {
     return values.reduce((res, item) => {
-      res.push(item)
+      if (this.isArray(item)) {
+        res.push(...item)
+      } else {
+        res.push(item)
+      }
       return res
     }, [...array])
   }
 }
 
-console.log(lizaidong.intersecrionBy)
+console.log(lizaidong.takeRight([1,2,3],0))
+
+
