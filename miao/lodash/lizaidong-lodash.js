@@ -177,8 +177,8 @@ var lizaidong = {
       iteratee = lizaidong.identity
     }
     iteratee = this.iteratee(iteratee)
+    var ary = [].concat(...args).map(arg => iteratee(arg))
     return array.filter(item => {
-      var ary = [].concat(...args).map(arg => iteratee(arg))
       return ary.includes(iteratee(item))
     })
   },
@@ -268,14 +268,13 @@ var lizaidong = {
   sortedIndexBy (array, value, iteratee = lizaidong.identity) {
     var f = this.iteratee(iteratee)
     for (var i = 0; i < array.length; i++) {
-      if (f(value) === f(array[i]) || f(value) < f(array[i])) {
+      if (f(value) <= f(array[i])) {
         return i
       }
     }
     return i - 1
   },
   sortedIndexOf (array, value) {
-    var index = 0
     var mid = array.length / 2 | 0
     var left = 0
     var right = array.length
@@ -290,19 +289,30 @@ var lizaidong = {
     return right
   },
   sortedLastIndex (array, value) {
-    if (value <= array[0]) return 0
-    if (value > array[array.length - 1]) return array.length
-    for (let i = array.length - 1; i >= 0; i--) {
-      if (array[i] === value) {
-        return i + 1
-      }
-      if (array[i] < value && value < array[i + 1]) {
-        return i
-      }
-    }
+    return this.sortedLastIndexBy(array, value, item => item)
   },
   sortedLastIndexBy (array, value, iteratee = lizaidong.identity) {
-    
+    var f = this.iteratee(iteratee)
+    for (var i = array.length - 1; i >= 0; i--) {
+      if (f(value) >= f(array[i])) {
+        return i + 1
+      }
+    }
+    return 0
+  },
+  sortedLastIndexOf (array, value) {
+    var left = 0
+    var right = array.length
+    var mid = array.length / 2 | 0
+    while(left < right) {
+      if (array[mid] > value) {
+        right = mid - 1
+      } else {
+        left = mid + 1
+      }
+      mid = (left + right) / 2 | 0
+    }
+    return right
   },
   sortedUniq (array) {
     return this.sortedUniqBy(array, item => item)
@@ -324,12 +334,23 @@ var lizaidong = {
     }
     return this.slice(array, n)
   },
+  takeRightWhile (array, predicate = lizaidong.iteratee) {
+    var f = this.iteratee(predicate)
+    for (var i = array.length - 1; i >= 0; i--) {
+      if (!f(array[i])) {
+        return array.slice(i + 1)
+      }
+    }
+  },
+  takeWhile(array, predicate = lizaidong.identity) {
+    var f = this.iteratee(predicate)
+    for (var i = 0; i < array.length; i++) {
+      if (!f(array[i])) {
+        return array.slice(0, i)
+      }
+    }
+  },
   union (...arrays) {
-    // let ary = arrays.reduce((res, item) => {
-    //   res = res.concat(item)
-    //   return res
-    // }, [])
-    // return Array.from(new Set(ary))
     return this.unionBy(...arrays, item => item)
   },
   unionBy (array, ...args) {
@@ -342,6 +363,16 @@ var lizaidong = {
     iteratee = this.iteratee(iteratee)
     let ary = array.concat(...args)
     return this.uniqBy(ary, iteratee)
+  },
+  unionWith (array, ...args) {
+    var iteratee = null
+    if (typeof args[args.length - 1] === 'function' || typeof args[args.length - 1] === 'string') {
+      iteratee = args.pop()
+    } else {
+      iteratee = lizaidong.identity
+    }
+    var f = this.iteratee(iteratee)
+    return this.uniqWith([].concat(array, ...args), f)
   },
   uniq (array) {
     return this.uniqBy(array, item => item)
@@ -356,6 +387,19 @@ var lizaidong = {
         return false
       }
     })
+  },
+  uniqWith (array, comparator) {
+    var f = this.iteratee(comparator)
+    return array.reduce((res, item) => {
+      for (var i = 0; i < res.length; i++) {
+        if (f(item, res[i])) {
+          break
+        } else {
+          res.push(item)
+        }
+      }
+      return res
+    }, [array[0]])
   },
   unzip (array) {
     let res = []
