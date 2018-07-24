@@ -36,44 +36,38 @@ var lizaidong = {
     return n === 0 ? array : array.slice(0, -n)
   },
   dropRightWhile (array, predicate = lizaidong.identity) {
-    let res = []
-    if (typeof predicate === 'function') {
-      array.forEach(item => {
-        if (!predicate(item)) {
-          res.push(item.user)
-        }
-      })
-    } else if (typeof predicate  === 'string') {
-      array.forEach(item => {
-        if (predicate in item) {
-          res.push(item.user)
-        }
-      })
-    } else if (predicate instanceof Array) {
-      predicate = this.fromPairs(predicate)
-      array.forEach(item => {
-        if (predicate.active === item.active) {
-          res.push(item.user)
-        }
-      })
-    } else if (typeof predicate === 'object') {
-      array.forEach(item => {
-        if (lizaidong.isEqual(item, predicate)) {
-          res.push(item.user)
-        }
-      })
-    }
-    return res
+    let f = lizaidong.iteratee(predicate)
+    return array.filter(item => {
+      if (typeof predicate === 'string') {
+        return predicate in item
+      } else {
+        return !f(item)
+      }
+    })
   },
-
-  // dropWhile
-  // findIndex (array, predicate, fromIndex = 0) {},
-  // findLastIndex
+  dropWhile (array, predicate = lizaidong.identity) {
+    return this.dropRightWhile(array, predicate)
+  },
+  findIndex (array, predicate, fromIndex = 0) {
+    let f = lizaidong.iteratee(predicate)
+    for (let i = 0; i < array.length; i++) {
+      if (f(array[i])) {
+        return i
+      }
+    }
+  },
+  findLastIndex (array, predicate = lizaidong.identity, fromIndex = array.length - 1) {
+    let f = this.iteratee(predicate)
+    for (let i = fromIndex; i >= 0; i--) {
+      if(f(array[i])) {
+        return i
+      }
+    }
+  },
   head (array) {
     return array[0]
   },
   flatten (array) {
-    // return [].concat(...array)
     const res = []
     for (let i = 0; i < array.length; i++) {
       if (lizaidong.isArray(array[i])) {
@@ -98,18 +92,6 @@ var lizaidong = {
     }
     return res
   },
-  // flattenDeep (array) {
-  //   let res = []
-  //   for (let i = 0; i < array.length; i++) {
-  //     if (Array.isArray(array[i])) {
-  //       let tmp = flattenDeep(array[i])
-  //       res.push(...tmp)
-  //     } else {
-  //       res.push(array[i])
-  //     }
-  //   }
-  //   return res
-  // },
   flattenDepth (array, depth = 1) {
     const res = []
     let count = 0
@@ -270,10 +252,10 @@ var lizaidong = {
     if (value > array[array.length - 1]) return array.length
     for (let i = array.length - 1; i >= 0; i--) {
       if (array[i] === value) {
-        return i
+        return i + 1
       }
       if (array[i] < value && value < array[i + 1]) {
-        return i + 1
+        return i
       }
     }
   },
@@ -446,21 +428,22 @@ var lizaidong = {
     if (Array.isArray(value) && Array.isArray(other)) {
       let l = Math.max(value.length, other.length)
       for (let i = 0; i < value.length; i++) {
-        if (!isEqual(value[i], other[i])) {
-          return false
-        }
-      }
-      return false
-    }
-    if (typeof value === 'object' && typeof other === 'object') {
-      if (Object.keys(value).length !== Object.keys(other).length) return false
-      for (let key in value) {
-        if (!isEqual(value[key], other[key])) {
+        if (!lizaidong.isEqual(value[i], other[i])) {
           return false
         }
       }
       return true
     }
+    if (typeof value === 'object' && typeof other === 'object') {
+      if (Object.keys(value).length !== Object.keys(other).length) return false
+      for (let key in value) {
+        if (!lizaidong.isEqual(value[key], other[key])) {
+          return false
+        }
+      }
+      return true
+    }
+    return value === other
   },
   identity (value) {
     return arguments[0]
@@ -548,7 +531,7 @@ var lizaidong = {
   isInteger (value) {
     return Number.isInteger(value)
   },
-  isMap () {
+  isMap (value) {
     return Object.prototype.toString.call(value) === "[object Map]"
   },
   isNaN (value) {
@@ -562,6 +545,20 @@ var lizaidong = {
       return false
     }
   },
+  isNil (value) {
+    if (value === null || value === undefined) {
+      return true
+    } else {
+      return false
+    }
+  },
+  isNull (value) {
+    if (value === null) {
+      return true
+    } else {
+      return false
+    }
+  },
   isMatch (object, source) {
     for (let key in source) {
       if (source[key] !== object[key]) {
@@ -569,6 +566,16 @@ var lizaidong = {
       }
     }
     return true
+  },
+  isNumber (value) {
+    if (typeof value === 'number') {
+      return true
+    } else {
+      return false 
+    }
+  },
+  isObject (value) {
+    return Object.prototype.toString.call(value) === '[object Null'
   },
   matches (source) {
     return function (object) {
@@ -581,11 +588,12 @@ var lizaidong = {
       }
     }
   },
-  matchesProperty (path, srcValue) {
-    return function (path, srcValue) {
-      let map = {}
-      map[path] = srcValue
-      return map
+  matchesProperty (srcValue) {
+    return function (path) {
+      if (path[srcValue[0]] === srcValue[1]) {
+        return true
+      }
+      return false
     }
   },
   property (path) {
