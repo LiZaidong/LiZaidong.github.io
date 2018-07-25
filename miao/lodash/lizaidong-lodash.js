@@ -20,13 +20,28 @@ var lizaidong = {
       iteratee = lizaidong.identity
     }
     iteratee = this.iteratee(iteratee)
+    var ary = [].concat(...args).map(arg => iteratee(arg))
     return array.filter(item => {
-      var ary = [].concat(...args).map(arg => iteratee(arg))
       return !ary.includes(iteratee(item))
     })
   },
-  differenceWith (array, values, comparator) {
-    return array.filter()
+  differenceWith (array, ...args) {
+    let iteratee = null
+    if (typeof args[args.length - 1] === 'function' || typeof args[args.length - 1] === 'string') {
+      iteratee = args.pop()
+    } else {
+      iteratee = lizaidong.identity
+    }
+    iteratee = this.iteratee(iteratee)
+    var ary = [].concat(...args)
+    return array.filter (item => {
+      for (var i = 0; i < ary.length; i++) {
+        if (iteratee(item, ary[i])) {
+          return false
+        }
+      }
+      return true
+    })
   },
   drop (array, n = 1) {
     return array.slice(n)
@@ -251,7 +266,6 @@ var lizaidong = {
     }
     return res
   },
-
   reverse (array) {
     let len = array.length
     for (let i = 0; i < len / 2; i++) {
@@ -394,9 +408,10 @@ var lizaidong = {
       for (var i = 0; i < res.length; i++) {
         if (f(item, res[i])) {
           break
-        } else {
-          res.push(item)
         }
+      }
+      if (i === res.length) {
+        res.push(item)
       }
       return res
     }, [array[0]])
@@ -507,6 +522,75 @@ var lizaidong = {
       return func.apply(null, [...args].slice(start))
     }
   },
+  assign (object, ...sources) {
+    sources.forEach(item => {
+      for (var key in item) {
+        if (item.hasOwnProperty(key)) {
+          object[key] = item[key]
+        }
+      }
+    })
+    return object
+  },
+  assignIn (objects, ...sources) {
+    sources.forEach(item => {
+      for (var key in item) {
+        object[key] = item[key]
+      }
+    })
+    return object
+  },
+  // merge (object, ...sources) {
+  //   sources.forEach (item => {
+  //     for (var key in item) {
+  //       if (object[key]) {
+  //         object[key]
+  //       }
+  //     }
+  //   })
+  //   return object
+  // },
+  forOwn (object, iteratee = lizaidong.identity) {
+    var f = this.iteratee(iteratee)
+    for (var key in object) {
+      if (object.hasOwnProperty(key)) {
+        f(object[key], key, object)
+      }
+    }
+    return object
+  },
+  // forOwnRight (object, iteratee = lizaidong.identity) {},
+  toPairs (object) {
+    var ary = []
+    for (var key in object) {
+      if (object.hasOwnProperty(key)) {
+        ary.push([key, object[key]])
+      }
+    }
+    return ary
+  },
+  toPairsIn (object) {
+    var ary = []
+    for (var key in object) {
+      ary.push([key, object[key]])
+    }
+    return ary
+  },
+  values (object) {
+    var ary = Object.keys(object)
+    return ary.map(item => object[item])
+  },
+  valuesIn (object) {
+    if (this.isObject(object)) {
+      var ary = []
+      for (var key in object) {
+        ary.push(object[key])
+      }
+      return ary
+    } else {
+      return this.values(object)
+    }
+  },
   isEqual(value, other) {
     if (value === other) {
       return true
@@ -554,16 +638,6 @@ var lizaidong = {
       return lizaidong.indexOf(collectiion, value, fromIndex) > -1
     }
   },
-  // slice (array, start = 0, end = array.length) {
-  //   const res = []
-  //   start = start < 0 ? start + array.length : start
-  //   end = end < 0 ? end + array.length : end
-  //   end = end > array.length ? array.length : end
-  //   for (let i = start; i < end; i++) {
-  //     res.push(array[i])
-  //   }
-  //   return res
-  // },
   isArguments (value) {
     return Object.prototype.toString.call(value) === "[object Arguments]"
   },
