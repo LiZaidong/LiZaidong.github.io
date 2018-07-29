@@ -10,7 +10,7 @@ var lizaidong = {
     return array.filter(v => v)
   },
   difference (array, ...values) {
-    return this.differenceBy(array, [].concat(...values, it => it))
+    return this.differenceBy.call(this, array, ...values, it => it)
   },
   differenceBy (array, ...args) {
     let iteratee = null
@@ -182,7 +182,7 @@ var lizaidong = {
     return array.slice(0, -1)
   },
   intersection (...array) {
-    return this.intersectionBy(array[0], [].concat(...array.slice(1), it => it))
+    return this.intersectionBy(array[0], [].concat(...array.slice(1)), it => it)
   },
   intersectionBy (array, ...args) {
     let iteratee = null
@@ -464,9 +464,27 @@ var lizaidong = {
     })
     return map
   },
-  xor (...arrays) {
-    let res = [].concat(...arrays)
-    return res.filter((item, index, ary) => ary.indexOf(item) === ary.lastIndexOf(item))
+  xor (array, ...args) {
+    return this.xorBy.call(this, array, ...args, it => it)
+  },
+  xorBy (array, ...args) {
+    var iteratee = null
+    if (typeof args[args.length - 1] === 'function' || typeof args[args.length - 1] === 'string') {
+      iteratee = args.pop()
+    } else {
+      iteratee = this.identity
+    }
+    var f = this.iteratee(iteratee)
+    var array = [].concat(array, ...args)
+    var ary = array.map(item => item = f(item))
+    ary = ary.map((item, index) => {
+      if (ary.indexOf(item) === ary.lastIndexOf(item)) {
+        return true
+      } else {
+        return false
+      }
+    })
+    return array.filter((item, index) => ary[index])
   },
   keyBy (collectiion, iteratee = lizaidong.identity) {
     iteratee = this.iteratee(iteratee)
@@ -512,9 +530,19 @@ var lizaidong = {
       return func(value)
     }
   },
+  without (array, ...values) {
+    for (var i = 0; i < array.length;) {
+      if (values.includes(array[i])) {
+        array.splice(i, 1)
+      } else {
+        i++
+      }
+    }
+    return array
+  },
   flip (func) {
     return function (...args) {
-      return func(args.reverse())
+      return func(...args.reverse())
     }
   },
   spread (func, start = 0) {
@@ -532,7 +560,7 @@ var lizaidong = {
     })
     return object
   },
-  assignIn (objects, ...sources) {
+  assignIn (object, ...sources) {
     sources.forEach(item => {
       for (var key in item) {
         object[key] = item[key]
