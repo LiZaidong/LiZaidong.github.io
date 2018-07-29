@@ -86,42 +86,23 @@ var lizaidong = {
     return array[0]
   },
   flatten (array) {
-    const res = []
-    for (let i = 0; i < array.length; i++) {
-      if (lizaidong.isArray(array[i])) {
-        res.push(...array[i])
-      } else {
-        res.push(array[i])
-      }
-    }
-    return res
+    return this.flattenDepth(array)
   },
   flattenDeep (array) {
-    const res = []
-    iterate(array)
-    function iterate (ary) {
-      ary.forEach(v => {
-        if (lizaidong.isArray(v)) {
-          iterate(v)
-        } else {
-          res.push(v)
-        }
-      })
-    }
-    return res
+    return this.flattenDepth(array, Infinity)
   },
   flattenDepth (array, depth = 1) {
     const res = []
     let count = 0
-    iterate(array)
-    function iterate (ary) {
+    recursive(array)
+    function recursive (ary) {
       count++
       ary.forEach(v => {
         if (lizaidong.isArray(v)) {
-          if (count >= depth) {
-            res.push(...v)
+          if (count > depth) {
+            res.push(v)
           } else {
-            iterate(v)
+            recursive(v)
           }
         } else {
           res.push(v)
@@ -261,7 +242,7 @@ var lizaidong = {
     var res = []
     for (var i = array.length - 1; i >= 0; i--) {
       if (ary.includes(i)) {
-        res = res.concat(array.splice(i, 1))
+        res = (array.splice(i, 1)).concat(res)
       }
     }
     return res
@@ -464,8 +445,99 @@ var lizaidong = {
     })
     return map
   },
+  // zipObjectDeep (props, values) {
+  //   var map = {}
+  //   props.forEach ((item, index) => {
+  //     var key = item.split('.')
+  //     // ['a', 'b[0]', 'c']
+  //   })
+  // },
+  zipWith (array, ...args) {
+    var iteratee = null
+    if (typeof args[args.length - 1] ==='function' || typeof args[args.length - 1] === 'string') {
+      iteratee = args.pop()
+    } else {
+      iteratee = lizaidong.identity
+    }
+    var f = this.iteratee(iteratee)
+    var ary = this.zip(array, ...args)
+    return ary.map(item => {
+      return item = f(...item)
+    })
+  },
+  countBy (collectiion, iteratee = lizaidong.identity) {
+    var f = this.iteratee(iteratee)
+    return collectiion.reduce((map, item) => {
+      var key = f(item)
+      if (map[key]) {
+        map[key]++
+      } else {
+        map[key] = 1
+      }
+      return map
+    }, {})
+  },
+  every (collectiion, predicate = lizaidong.identity) {
+    var f = this.iteratee(predicate)
+    for (var i = 0; i < collectiion.length; i++) {
+      if (!f(collectiion[i])) {
+        return false
+      }
+    }
+    return true
+  },
   xor (array, ...args) {
     return this.xorBy.call(this, array, ...args, it => it)
+  },
+  find (collectiion, predicate = lizaidong.identity, fromIndex = 0) {
+    var f = this.iteratee(predicate)
+    var i = fromIndex
+    var isPlus = true
+    if (i < 0) {
+      i = collectiion.length + i
+      isPlus = false
+    }
+    while (i >= 0 && i < collectiion.length) {
+      if (f(collectiion[i])) {
+        return collectiion[i]
+      }
+      if (isPlus) {
+        i++
+      } else {
+        i--
+      }
+    }
+  },
+  findLast (collectiion, predicate = lizaidong.identity, fromIndex = collectiion.length - 1) {
+    var f = this.iteratee(predicate)
+    var i = fromIndex
+    var isPlus = false
+    if (i < 0) {
+      i = collectiion.length + i
+      isPlus = true
+    }
+    while (i >= 0 && i < collectiion.length) {
+      if (f(collectiion[i])) {
+        return collectiion[i]
+      }
+      if (isPlus) {
+        i++
+      } else {
+        i--
+      }
+    }
+  },
+  flatMap (collectiion, iteratee = lizaidong.identity) {
+    return this.flatMapDepth(collectiion, iteratee)
+  },
+  flatMapDeep (collectiion, iteratee) {
+    return this.flatMapDepth(collectiion, iteratee, Infinity)
+  },
+  flatMapDepth (collectiion, iteratee, depth = 1) {
+    var f = this.iteratee(iteratee)
+    return collectiion.reduce((ary, item) => {
+      return ary.concat(lizaidong.flattenDepth(f(item), depth - 1))
+    }, [])
   },
   xorBy (array, ...args) {
     var iteratee = null
@@ -485,6 +557,24 @@ var lizaidong = {
       }
     })
     return array.filter((item, index) => ary[index])
+  },
+  xorWith (array, ...args) {
+    var iteratee = null
+    if (typeof args[args.length - 1] === 'function' || typeof args[args.length - 1] === 'string') {
+      iteratee = args.pop()
+    } else {
+      iteratee = this.identity
+    }
+    var f = this.iteratee(iteratee)
+    var array = [].concat(array, ...args)
+    return array.filter((item, index) => {
+      for (var i = 0; i < array.length; i++) {
+        if (i !== index && f(item, array[i])) {
+          return false
+        }
+      }
+      return true
+    })
   },
   keyBy (collectiion, iteratee = lizaidong.identity) {
     iteratee = this.iteratee(iteratee)
@@ -790,6 +880,9 @@ var lizaidong = {
   property (path) {
     return function (obj) {
       return obj[path]
+      // console.log(path)
+      // var ary = path.split('.')
+      // return ary.reduce((obj, item) => obj[item], obj)
     }
   },
   sum (array) {
@@ -830,13 +923,20 @@ var lizaidong = {
   },
   forEach (collection, iteratee = lizaidong.identity) {
     iteratee = lizaidong.iteratee(iteratee)
-    return collection.reduce ((res, item, ary) => {
+    return collection.reduce ((res, item, index, ary) => {
       return iteratee(item, index, ary)
     }, collection)
   },
-  filter (collectiion, predicate = lizaidong.identity) {
+  forEachRight (collection, iteratee = lizaidong.identity) {
+    iteratee = lizaidong.iteratee(iteratee)
+    collection = collection.reverse()
+    return collection.reduce ((res, item, index, ary) => {
+      return iteratee(item, index, ary)
+    }, collection)
+  },
+  filter (collection, predicate = lizaidong.identity) {
     predicate = lizaidong.iteratee(predicate)
-    return collectiion.reduce((res, item, index) => {
+    return collection.reduce((res, item, index) => {
       if (predicate(item)) {
         res.push(item)
       }
