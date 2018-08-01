@@ -465,9 +465,9 @@ var lizaidong = {
       return item = f(...item)
     })
   },
-  countBy (collectiion, iteratee = lizaidong.identity) {
+  countBy (collection, iteratee = lizaidong.identity) {
     var f = this.iteratee(iteratee)
-    return collectiion.reduce((map, item) => {
+    return collection.reduce((map, item) => {
       var key = f(item)
       if (map[key]) {
         map[key]++
@@ -477,10 +477,10 @@ var lizaidong = {
       return map
     }, {})
   },
-  every (collectiion, predicate = lizaidong.identity) {
+  every (collection, predicate = lizaidong.identity) {
     var f = this.iteratee(predicate)
-    for (var i = 0; i < collectiion.length; i++) {
-      if (!f(collectiion[i])) {
+    for (var i = 0; i < collection.length; i++) {
+      if (!f(collection[i])) {
         return false
       }
     }
@@ -489,17 +489,17 @@ var lizaidong = {
   xor (array, ...args) {
     return this.xorBy.call(this, array, ...args, it => it)
   },
-  find (collectiion, predicate = lizaidong.identity, fromIndex = 0) {
+  find (collection, predicate = lizaidong.identity, fromIndex = 0) {
     var f = this.iteratee(predicate)
     var i = fromIndex
     var isPlus = true
     if (i < 0) {
-      i = collectiion.length + i
+      i = collection.length + i
       isPlus = false
     }
-    while (i >= 0 && i < collectiion.length) {
-      if (f(collectiion[i])) {
-        return collectiion[i]
+    while (i >= 0 && i < collection.length) {
+      if (f(collection[i])) {
+        return collection[i]
       }
       if (isPlus) {
         i++
@@ -508,17 +508,17 @@ var lizaidong = {
       }
     }
   },
-  findLast (collectiion, predicate = lizaidong.identity, fromIndex = collectiion.length - 1) {
+  findLast (collection, predicate = lizaidong.identity, fromIndex = collection.length - 1) {
     var f = this.iteratee(predicate)
     var i = fromIndex
     var isPlus = false
     if (i < 0) {
-      i = collectiion.length + i
+      i = collection.length + i
       isPlus = true
     }
-    while (i >= 0 && i < collectiion.length) {
-      if (f(collectiion[i])) {
-        return collectiion[i]
+    while (i >= 0 && i < collection.length) {
+      if (f(collection[i])) {
+        return collection[i]
       }
       if (isPlus) {
         i++
@@ -527,17 +527,143 @@ var lizaidong = {
       }
     }
   },
-  flatMap (collectiion, iteratee = lizaidong.identity) {
-    return this.flatMapDepth(collectiion, iteratee)
+  flatMap (collection, iteratee = lizaidong.identity) {
+    return this.flatMapDepth(collection, iteratee)
   },
-  flatMapDeep (collectiion, iteratee) {
-    return this.flatMapDepth(collectiion, iteratee, Infinity)
+  flatMapDeep (collection, iteratee) {
+    return this.flatMapDepth(collection, iteratee, Infinity)
   },
-  flatMapDepth (collectiion, iteratee, depth = 1) {
+  flatMapDepth (collection, iteratee, depth = 1) {
     var f = this.iteratee(iteratee)
-    return collectiion.reduce((ary, item) => {
+    return collection.reduce((ary, item) => {
       return ary.concat(lizaidong.flattenDepth(f(item), depth - 1))
     }, [])
+  },
+  partition (collection, predicate = lizaidong.identity) {
+    var f = this.iteratee(predicate)
+    var truthy = collection.filter(item => f(item))
+    var falsey = collection.filter(item => !f(item))
+    return [truthy, falsey]
+  },
+  reduce (collection, iteratee = lizaidong.identity, accumulator = collection[0]) {
+    var keys = Object.keys(collection)
+    var i
+    if (arguments.length > 2) {
+      i = 0
+    } else {
+      i = 1
+    }
+    var f = this.iteratee(iteratee)
+    for (;i < keys.length; i++) {
+      accumulator = f(accumulator, collection[keys[i]], keys[i])
+    }
+    return accumulator
+  },
+  redeuceRight (collection, iteratee, accumulator = collection[collection.length - 1]) {
+    var keys = Object.keys(collection)
+    var i
+    if (arguments.length > 2) {
+      i = collection.length - 1
+    } else {
+      i = collection.length - 2
+    }
+    var f = this.iteratee(iteratee)
+    for (;i >= 0; i--) {
+      accumulator = f(accumulator, collection[keys[i]], keys[i])
+    }
+    return accumulator
+  },
+  reject (collection, predicate) {
+    var f = this.iteratee(predicate)
+    var keys = Object.keys(collection)
+    var res = []
+    // for (var i = 0; i < keys.length; i++) {
+    //   if (!f(collection[keys[i]])) {
+    //     res.push(collection[keys[i]])
+    //   }
+    // }
+    for (var key of keys) {
+      if (!f(collection[key])) {
+        res.push(collection[key])
+      }
+    }
+    return res
+  },
+  sample (collection) {
+    return this.sampleSize(collection)[0]
+  },
+  sampleSize (collection, n = 1) {
+    var keys = Object.keys(collection)
+    var res = []
+    if (n > keys.length) {
+      n = keys.length
+    }
+    for (var i = 0; i < n; i++) {
+      var index = Math.floor(Math.random() * keys.length)
+      res.push(collection[keys[index]])
+    }
+    return res
+  },
+  shuffle (collection) {
+    var keys = Object.keys(collection)
+    var res = []
+    while (keys.length > 0) {
+      var index = Math.floor(Math.random() * keys.length)
+      res.push(collection[keys.splice(index, 1)])
+    }
+    return res
+  },
+  size (collection) {
+    return Object.keys(collection).length
+  },
+  some (collection, predicate = lizaidong.identity) {
+    var keys = Object.keys(collection)
+    var f = this.iteratee(predicate)
+    for (var i = 0; i < keys.length; i++) {
+      var item = collection[keys[i]]
+      if (f(item)) {
+        return true
+      }
+    }
+    return false
+  },
+  sortBy (collection, iteratees) {
+    var fs = iteratees.map(item => lizaidong.iteratee(item))
+    var keys = Object.keys(collection)
+    var res = keys.map(item => collection[item])
+    for (var i = fs.length - 1; i >= 0; i--) {
+      res = res.sort(function(a, b) {
+        return fs[i](a) > fs[i](b)
+      })
+    }
+    return res
+  },
+  castArray (value) {
+    if (Array.isArray(value)) {
+      return value
+    } else {
+      return [value]
+    }
+  },
+  conformsTo (object, source) {
+    for (var key in object) {
+      if (key in source) {
+        var f = this.iteratee(source[key]) 
+        if (!f(object[key])) {
+          return false
+        }
+      }
+    }
+    return true
+  },
+  eq (value, other) {
+    return this.isEqual(value, other)
+  },
+  gt (value, other) {
+    return value > other
+  },
+  gte(value, other) {
+    return value >= other
   },
   xorBy (array, ...args) {
     var iteratee = null
@@ -576,16 +702,16 @@ var lizaidong = {
       return true
     })
   },
-  keyBy (collectiion, iteratee = lizaidong.identity) {
+  keyBy (collection, iteratee = lizaidong.identity) {
     iteratee = this.iteratee(iteratee)
-    return collectiion.reduce((map, item) => {
+    return collection.reduce((map, item) => {
       map[iteratee(item)] = item
       return map
     }, {})
   },
-  groupBy (collectiion, iteratee = lizaidong.identity) {
+  groupBy (collection, iteratee = lizaidong.identity) {
     iteratee = this.iteratee(iteratee)
-    return collectiion.reduce ((map, item) => {
+    return collection.reduce ((map, item) => {
       let key = iteratee(item)
       if (!map[key]) {
         map[key] = [item]
@@ -739,12 +865,12 @@ var lizaidong = {
   identity (value) {
     return arguments[0]
   },
-  includes (collectiion, value, fromIndex = 0) {
-    if (Object.prototype.toString.call(collectiion) === '[object Object]') {
+  includes (collection, value, fromIndex = 0) {
+    if (Object.prototype.toString.call(collection) === '[object Object]') {
       let count = 0
-      for (let i in collectiion) {
+      for (let i in collection) {
         if (count === fromIndex) {
-          if (collectiion[i] === value) {
+          if (collection[i] === value) {
             return true
           }
         } else {
@@ -753,7 +879,7 @@ var lizaidong = {
       }
       return false
     } else {
-      return lizaidong.indexOf(collectiion, value, fromIndex) > -1
+      return lizaidong.indexOf(collection, value, fromIndex) > -1
     }
   },
   isArguments (value) {
@@ -842,7 +968,7 @@ var lizaidong = {
   },
   isMatch (object, source) {
     for (let key in source) {
-      if (source[key] !== object[key]) {
+      if (!this.isEqual(source[key], object[key])) {
         return false
       }
     }
@@ -856,17 +982,95 @@ var lizaidong = {
     }
   },
   isObject (value) {
-    return Object.prototype.toString.call(value) === '[object Object]'
+    return typeof value === 'object' || typeof value === 'function'
+  },
+  isObjectLike (value) {
+    return typeof value === 'object' && value !== null
+  },
+  isPlainObject (value) {
+    return value instanceof Object || (typeof value === 'object' && value.property == null)
+  },
+  isRegExp (value) {
+    return Object.prototype.toString.call(value) === '[object RegExp]'
+  },
+  isInteger (value) {
+    return typeof value === 'number' && value % 1 === 0
+  },
+  isSet (value) {
+    return Object.prototype.toString.call(value) === '[object Set]'
+  },
+  isString (value) {
+    return Object.prototype.toString.call(value) === '[object String]'
+  },
+  isSymbol (value) {
+    return Object.prototype.toString.call(value) === '[object Symbol]'
+  },
+  isTypeArray (value) {
+    return Object.prototype.toString.call(value) === '[object Uint8Array]'
+  },
+  isUndefined (value) {
+    return Object.prototype.toString.call(value) === '[object Undefined]'
+  },
+  isWeakMap (value) {
+    return Object.prototype.toString.call(value) === '[object WeakMap]'
+  },
+  isWeakSet(value) {
+    return Object.prototype.toString.call(value) === '[object WeakSet]'
+  },
+  lt (value, other) {
+    return value < other
+  },
+  ite (value, other) {
+    return value <= other
+  },
+  toArray (value) {
+    var res = []
+    if (value !== null) {
+      if (typeof value === 'object' || typeof value === 'string') {
+        if (Object.prototype.toString.call(value) === '[object Object]') {
+          for (var i in value) {
+            res.push(value[i])
+          }
+        } else {
+          for (var i of value) {
+            res.push(i)
+          }
+        }
+      }
+    }
+    return res
+  },
+  toFinite (value) {
+    var num = this.toNumber(value)
+    if (num > Number.MAX_VALUE) {
+      return Number.MAX_VALUE
+    }
+    if (num < Number.MIN_VALUE) {
+      return -Number.MAX_VALUE
+    }
+    return num
+  },
+  toInteger (value) {
+    var num = this.toFinite(value)
+    return Math.floor(num)
+  },
+  toLength (value) {
+    var num = this.toInteger(value)
+    if (num < 0) return 0
+    if (num > 2 ** 32 - 1) return 2 ** 32 - 1
+    return num
+  },
+  toNumber (value) {
+    return Number(value)
   },
   matches (source) {
     return function (object) {
       for (let key in source) {
-        if (source[key] === object[key]) {
-          return true
-        } else {
+        if (source[key] !== object[key]) {
           return false
         }
       }
+      return true
     }
   },
   matchesProperty (srcValue) {
