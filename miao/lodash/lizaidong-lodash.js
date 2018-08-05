@@ -119,6 +119,11 @@ var lizaidong = {
   negate (predicate) {
     return (...args) => !predicate(...args)
   },
+  // 设置默认值
+  defaultTo (value, defaultValue) {
+    return !this.isNil(value) && value === value ? value : defaultValue
+  },
+  // 起始到结束的步数
   range (start = 0, end, step = 1) {
     let res = []
     if (!end) {
@@ -143,6 +148,10 @@ var lizaidong = {
       }
     }
     return res
+  },
+  // 起始到结束的步数的倒序
+  rangeRight (start = 0, end, step = 1) {
+    return this.range(start, end, step).reverse()
   },
   keys (object) {
     return Object.keys(object)
@@ -577,11 +586,6 @@ var lizaidong = {
     var f = this.iteratee(predicate)
     var keys = Object.keys(collection)
     var res = []
-    // for (var i = 0; i < keys.length; i++) {
-    //   if (!f(collection[keys[i]])) {
-    //     res.push(collection[keys[i]])
-    //   }
-    // }
     for (var key of keys) {
       if (!f(collection[key])) {
         res.push(collection[key])
@@ -627,13 +631,32 @@ var lizaidong = {
     }
     return false
   },
-  sortBy (collection, iteratees) {
-    var fs = iteratees.map(item => lizaidong.iteratee(item))
+  // 按指定的迭代函数的升序排列
+  sortBy (collection, iteratees = lizaidong.identity) {
+    // var fs = iteratees.map(item => lizaidong.iteratee(item))
+    // var keys = Object.keys(collection)
+    // var res = keys.map(item => collection[item])
+    // for (var i = fs.length - 1; i >= 0; i--) {
+    //   res = res.sort(function(a, b) {
+    //     return fs[i](a) > fs[i](b)
+    //   })
+    // }
+    // return res
+    return this.orderBy(collection, iteratees)
+  },
+  // 指定排序的迭代函数，并指定迭代函数的升序或降序
+  orderBy (collection, iteratees = lizaidong.identity, orders) {
+    var fs = iteratees.map(lizaidong.iteratee)
     var keys = Object.keys(collection)
+    orders = orders || new Array(fs.length).fill('asc')
     var res = keys.map(item => collection[item])
     for (var i = fs.length - 1; i >= 0; i--) {
       res = res.sort(function(a, b) {
-        return fs[i](a) > fs[i](b)
+        if (orders[i] === 'desc') {
+          return fs[i](a) < fs[i](b)
+        } else {
+          return fs[i](a) > fs[i](b)
+        }
       })
     }
     return res
@@ -746,6 +769,11 @@ var lizaidong = {
       }
     }
   },
+  ary (func, num = func.length) {
+    return function (...value) {
+      return func.apply(null, value.slice(0, num))
+    }
+  },
   unary (func) {
     return function (value) {
       return func(value)
@@ -760,6 +788,30 @@ var lizaidong = {
       }
     }
     return array
+  },
+  // uniqueId (prefix = '') {
+
+  // },
+  cloneDeep (value) {
+    // if (typeof value === 'object') {
+    //   return JSON.parse(JSON.stringify(value))
+    // } else {
+    //   return value
+    // }
+    if (typeof value === 'object' && value) {
+      var res = Array.isArray(value) ? [] : {}
+      var keys = Object.keys(value)
+      keys.forEach (item => {
+        if (typeof value[item] === 'object') {
+          res[item] = lizaidong.cloneDeep(value[item])
+        } else {
+          res[item] = value[item]
+        }
+      })
+      return res
+    } else {
+      return value
+    }
   },
   flip (func) {
     return function (...args) {
@@ -790,8 +842,8 @@ var lizaidong = {
     return object
   },
   merge (object, ...sources) {
-    sources.forEach (item => { // item = other
-      for (var key in item) { // a
+    sources.forEach (item => {
+      for (var key in item) {
         if (typeof item[key] === 'object') {
           this.merge(object[key], item[key])
         } else {
@@ -998,11 +1050,16 @@ var lizaidong = {
     return typeof value === 'object' && value !== null
   },
   isPlainObject (value) {
-    return Object.prototype.toString.call(value) === '[object Object]'
+    return value.__proto__ === Object
   },
   isRegExp (value) {
     return Object.prototype.toString.call(value) === '[object RegExp]'
   },
+  // 安全的整数
+  isSafeInteger (value) {
+    return this.isInteger(value) && (value >= Number.MAX_SAFE_INTEGER && value <= Number.MAX_SAFE_INTEGER)
+  },
+  // 整数
   isInteger (value) {
     return typeof value === 'number' && value % 1 === 0
   },
@@ -1070,29 +1127,36 @@ var lizaidong = {
     if (num > 2 ** 32 - 1) return 2 ** 32 - 1
     return num
   },
+  // 转换成数字
   toNumber (value) {
     return Number(value)
   },
+  // 加
   add (augend, addend) {
     return augend + addend
   },
+  // 向上取整
   ceil (number, precision = 0) {
     var d = 10 ** precision
     return Math.ceil(number * d) / d
   },
+  // 除
   divide (dividend, divisor) {
     return dividend / divisor
   },
+  // 向下取整
   floor (number, precision = 0) {
     var d = 10 ** precision
     return Math.floor(number * d) / d
   },
+  // 求最大值
   max (array) {
     if (array.length === 0) {
       return undefined
     }
     return this.maxBy(array, it => it)
   },
+  // 根据迭代函数求最大值
   maxBy (array, iteratee = lizaidong.identity) {
     var f = this.iteratee(iteratee)
     return array.reduce((prev, item) => {
@@ -1103,19 +1167,23 @@ var lizaidong = {
       }
     })
   },
+  // 求平均值
   mean (array) {
     return this.meanBy(array, it => it)
   },
+  // 根据迭代函数求平均值
   meanBy (array, iteratee) {
     var f = this.iteratee(iteratee)
     return array.map(f).reduce((prev, item) => prev + item) / array.length
   },
+  // 求最小值
   min (array) {
     if (array.length === 0) {
       return undefined
     }
     return this.minBy(array, it => it)
   },
+  // 根据迭代函数求最小值
   minBy (array, iteratee = lizaidong.identity) {
     var f = this.iteratee(iteratee)
     return array.reduce((prev, item) => {
@@ -1126,15 +1194,134 @@ var lizaidong = {
       }
     })
   },
+  // 乘
   multiply (augend, addend) {
     return augend * addend
   },
+  // 四舍五入
   round (number, precision = 0) {
     var d = 10 ** precision
     return Math.round(number * d) / d
   },
-  substract (minuend, substrahend) {
+  // 减
+  subtract (minuend, substrahend) {
     return minuend - substrahend
+  },
+  // 数字若超过范围，离哪个最近
+  clamp (number, ...args) {
+    var lower = number, upper = args[0]
+    if (args.length > 1) {
+      lower = args[0]
+      upper = args[1]
+    }
+    if (number < lower) {
+      return lower
+    } else if (number > upper) {
+      return upper
+    } else {
+      return number
+    }
+  },
+  // 判断一个数是否在范围内
+  inRange (number, start,end = 0) {
+    if (start > end) {
+      var temp = end
+      end = start
+      start = temp
+    }
+    return number >= start && number < end
+  },
+  // 是否有浮点数的随机数
+  random (lower = 0, upper = 1, floating = false) {
+    if (typeof arguments[arguments.length - 1] === 'boolean') {
+      floating = arguments.pop()
+    } else {
+      floating = false
+    }
+    [upper, lower] = arguments
+    lower = lower ? lower : 0
+    if (lower % 1 !== 0 || upper % 1 !== 0) {
+      floating = true
+    }
+    if (floating) {
+      return Math.random() * Math.abs(upper - lower) + Math.min(lower, upper) 
+    } else {
+      return Math.floor(Math.random() * Math.abs(upper - lower)) + Math.min(lower, upper)
+    }
+  },
+  // 根据字符串形式的路径取对象里的值
+  at (object, paths) {
+    var fs = [].concat(paths).map(this.toPath)
+    return fs.map(item => this.get(object, item))
+  },
+  // 根据路径获取对象的值
+  get (object, path, defaultValue) {
+    if (typeof path === 'string') {
+      path = this.toPath(path)
+    }
+    try {
+      return path.reduce((obj, item) => obj[item], object)
+    } catch (e) {
+      return defaultValue
+    }
+  },
+  // 把字符串路径转换成数组
+  toPath (value) {
+    return value.match(/[^\.\[\] ]+/g)
+  },
+  once (func) {
+    var res
+    return function (...args) {
+      if (res !== undefined) {
+        res = func(...args)
+      }
+      return res
+    }
+  },
+  times (number, iteratee = lizaidong.identity) {
+    var f = this.iteratee(iteratee)
+    return new Array(number).fill(0).map((_, index) => index).map(f)
+  },
+  conforms (source) {
+    return function (object) {
+      for (var key in object) {
+        if (source[key]) {
+          return source[key](object[key])
+        }
+      }
+    }
+  },
+  constant (value) {
+    return function (object) {
+      return value !== undefined ? value : object
+    }
+  },
+  flow (func) {
+    return function (...args) {
+      var f = func.shift()
+      res = f(...args)
+      if (func.length > 0) {
+        return lizaidong.flow(func)(res)
+      } else {
+        return res
+      }
+    }
+  },
+  method (path, ...args) {
+    return function (object) {
+      return lizaidong.get(object, path)(...args)      
+    }
+  },
+  methodOf (object, ...args) {
+    return function (path) {
+      return lizaidong.get(object, path)(...args)
+    }
+  },
+  nthArg (n = 0) {
+    return function () {
+      if (n < 0) n += arguments.length
+      return arguments[n]
+    }
   },
   matches (source) {
     return function (object) {
@@ -1156,16 +1343,14 @@ var lizaidong = {
   },
   property (path) {
     return function (obj) {
-      var ary = path.split('.')
-      var key = obj[ary[0]]
-      if (ary.length > 1) {
-        for (var i = 1; i < ary.length; i++) {
-          key = key[ary[i]]
-        }
-      }
-      return key
-      // console.log(path)
-      // return ary.reduce((obj, item) => obj[item], obj)
+      if (typeof path === 'string') path = lizaidong.toPath(path)
+      return path.reduce((obj, item) => lizaidong.get(obj, item), obj)
+    }
+  },
+  propertyOf (obj) {
+    return function (path) {
+      if (typeof path === 'string') path = lizaidong.toPath(path)
+      return path.reduce((obj, item) => lizaidong.get(obj, item), obj)
     }
   },
   sum (array) {
@@ -1192,6 +1377,141 @@ var lizaidong = {
     if (typeof func === 'object') {
       return lizaidong.matches(func)
     }
+  },
+  // camelCase (string = '') {
+  //   var res = string.match(/([A-Za-z]+)/g)
+  //   var str = ''
+  //   return res.reduce((init, item) => {
+
+  //   })
+  // },
+  replace (string = '', pattern, replacement) {
+    // lodash只换第一次
+    var match = string.match(pattern)
+    if (match) {
+      var end = match.index + match[0].length
+      string = string.slice(0, match.index) + replacement + string.slice(end)
+    }
+    //全部换掉的
+    // var match, end
+    // do {
+    //   match = string.match(pattern)
+    //   end = match.index + match[0].length
+    //   if (match) string = string.slice(0, match.index) + replacement + string.slice(end)
+    // } while (match)
+    return string
+  },
+  // 提取字符串中的连续字母，转换成首字母大写的
+  snakeCase (string) {
+    var pattern = /([A-Z]?[a-z]+)|([a-zA-Z]+)/g
+    string = string.match(pattern)
+    return string.map(lizaidong.toLower).map(lizaidong.upperFirst).join('_')
+  },
+  // 把字符串用分隔符分割成数组
+  split (string, separator, limit) {
+    limit = limit || Infinity
+    var res = []
+    var match
+    do {
+      match = string.match(separator)
+      res.push(string.substr(0, match.index))
+      string = string.slice(match.index + 1)
+    } while (match && res.length < limit)
+    return res
+  },
+  startCase (string = '') {
+    return lizaidong.words(string).map(lizaidong.upperFirst).join(' ').trim()
+  },
+  // 字符串是否以目标值开头
+  startsWith (string = '', target, position = 0) {
+    var res = string.match(target)
+    if (res) {
+      return res.index === position
+    }
+    return false
+  },
+  // 全小写
+  toLower (string = '') {
+    for (var i = 0; i < string.length; i++) {
+      if (/[A-Z]/.test(string[i])) {
+        string = string.replace(string[i], String.fromCharCode(string[i].charCodeAt(0) + 32))
+      }
+    }
+    return string
+  },
+  // 全大写
+  toUpper (string = '') {
+    for (var i = 0; i < string.length; i++) {
+      if (/[a-z]/.test(string[i])) {
+        string = string.replace(string[i], String.fromCharCode(string[i].charCodeAt(0) - 32))
+      }
+    }
+    return string
+  },
+  // 去掉前后空格
+  trim (string = '', chars = ' ') {
+    chars = typeof chars === 'string' ? chars : ' '
+    return lizaidong.trimEnd(lizaidong.trimStart(string, chars), chars)
+  },
+  // 删除字符串起始的空格或指定字符
+  trimStart (string = '', chars = ' ') {
+    chars = typeof chars === 'string' ? chars : ' '
+    while (chars.match(string[0])) {
+      string = string.slice(1)
+    }
+    return string
+  },
+  // 删除字符串结尾的空格或指定字符
+  trimEnd (string = '', chars = ' ') {
+    chars = typeof chars === 'string' ? chars : ' '
+    while (chars.match(string[string.length - 1])) {
+      string = string.slice(0, string.length - 1)
+    }
+    return string
+  },
+  // 根据条件截断字符串
+  truncate (string = '', options = {}) {
+    options.omission = options.omission || '...'
+    options.length = options.length || 30
+
+    var omission_l = options.omission.length
+    var str = string.slice(0, options.length - omission_l)
+    if (options.separator === undefined) {
+      return str + options.omission
+    } else {
+      str = str.split(options.separator).slice(-2, -1).join()
+      var index = string.lastIndexOf(str) + str.length
+      return string.slice(0, index) + options.omission
+    }
+
+  },
+  // 字符串是否以目标字符串在指定位置结尾
+  endsWith (string = '', target, position = string.length) {
+    var res = string.match(target)
+    if (res) {
+      return res.index === position - 1
+    }
+    return false
+  },
+  // 字符串转成空格分割的全大写
+  upperCase (string = '') {
+    var res = string.match(/([A-Z]?[a-z]+)/g)
+    if (res) {
+      return res.reduce ((s, item) =>  s + lizaidong.toUpper(item) + ' ', '').trim()
+    }
+    return string
+  },
+  // 首字母大写
+  upperFirst (string = '') {
+    if (/[a-z]/.test(string[0])) {
+      return String.fromCharCode(string.charCodeAt(0) - 32) + string.slice(1)
+    }
+    return string
+  },
+  // 把字符串按匹配结果拆分成数组
+  words (string = '', pattern = undefined) {
+    pattern = pattern || /[A-Z]?[a-z]+/g
+    return string.match(pattern)
   },
   // 作业：用reduce实现map,filter,forEach,slice,fill,concat....
   map (collection, iteratee = lizaidong.identity) {
@@ -1257,5 +1577,3 @@ var lizaidong = {
     }, [...array])
   }
 }
-
-
