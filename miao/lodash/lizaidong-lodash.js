@@ -1251,13 +1251,13 @@ var lizaidong = {
   },
   // 根据字符串形式的路径取对象里的值
   at (object, paths) {
-    var fs = [].concat(paths).map(this.toPath)
-    return fs.map(item => this.get(object, item))
+    var fs = [].concat(paths).map(lizaidong.toPath)
+    return fs.map(item => lizaidong.get(object, item))
   },
   // 根据路径获取对象的值
   get (object, path, defaultValue) {
     if (typeof path === 'string') {
-      path = this.toPath(path)
+      path = lizaidong.toPath(path)
     }
     try {
       return path.reduce((obj, item) => obj[item], object)
@@ -1345,7 +1345,7 @@ var lizaidong = {
   },
   property (path) {
     return function (obj) {
-      return this.get(obj, path)
+      return lizaidong.get(obj, path)
     }
   },
   propertyOf (obj) {
@@ -1387,6 +1387,7 @@ var lizaidong = {
   //   })
   // },
   update (object, path, updater) {
+    var 
     return updater(lizaidong.get(object, path))
   },
   // 把字符串转换成驼峰
