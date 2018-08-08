@@ -1050,14 +1050,14 @@ var lizaidong = {
     return typeof value === 'object' && value !== null
   },
   isPlainObject (value) {
-    return value.__proto__ === Object
+    return value.__proto__ === Object || value.__proto__ === undefined
   },
   isRegExp (value) {
     return Object.prototype.toString.call(value) === '[object RegExp]'
   },
   // 安全的整数
   isSafeInteger (value) {
-    return this.isInteger(value) && (value >= Number.MAX_SAFE_INTEGER && value <= Number.MAX_SAFE_INTEGER)
+    return this.isInteger(value) && (value >= Number.MIN_SAFE_INTEGER && value <= Number.MAX_SAFE_INTEGER)
   },
   // 整数
   isInteger (value) {
@@ -1232,13 +1232,13 @@ var lizaidong = {
     return number >= start && number < end
   },
   // 是否有浮点数的随机数
-  random (lower = 0, upper = 1, floating = false) {
-    if (typeof arguments[arguments.length - 1] === 'boolean') {
-      floating = arguments.pop()
+  random (...args) {
+    if (typeof args[args.length - 1] === 'boolean') {
+      floating = args.pop()
     } else {
       floating = false
     }
-    [upper, lower] = arguments
+    var [upper, lower] = args
     lower = lower ? lower : 0
     if (lower % 1 !== 0 || upper % 1 !== 0) {
       floating = true
@@ -1271,8 +1271,10 @@ var lizaidong = {
   },
   once (func) {
     var res
+    var flag
     return function (...args) {
-      if (res !== undefined) {
+      if (!flag) {
+        flag = true
         res = func(...args)
       }
       return res
@@ -1343,14 +1345,13 @@ var lizaidong = {
   },
   property (path) {
     return function (obj) {
-      if (typeof path === 'string') path = lizaidong.toPath(path)
-      return path.reduce((obj, item) => lizaidong.get(obj, item), obj)
+      return this.get(obj, path)
     }
   },
   propertyOf (obj) {
+    if (!obj) return
     return function (path) {
-      if (typeof path === 'string') path = lizaidong.toPath(path)
-      return path.reduce((obj, item) => lizaidong.get(obj, item), obj)
+      return lizaidong.get(obj, path)
     }
   },
   sum (array) {
@@ -1385,6 +1386,82 @@ var lizaidong = {
 
   //   })
   // },
+  update (object, path, updater) {
+    return updater(lizaidong.get(object, path))
+  },
+  // 把字符串转换成驼峰
+  camelCase (string) {
+    var res = string.match(/[a-zA-Z]+/g)
+    return res.map(lizaidong.capitalize).join('')
+  },
+  // 首字母大写其余小写
+  capitalize (string = '') {
+    return lizaidong.upperFirst(lizaidong.toLower(string))
+  },
+  escape (string = '') {
+    return string.replace(/[&<>"']/g,c =>{
+      switch (c) {
+        case '&':
+          return '\&amp;'
+        case '<':
+          return '\&lt;'
+        case '>':
+          return '\&gt;'
+        case '"':
+          return '\&quot;'
+        case '\'':
+          return'\&#x27;'
+      }
+    })
+  },
+  escapeRegExp (string) {
+    return string.replace(/([\^$.*?\(\)\[\]{}\| ])/g, '\\$1')
+  },
+  kebabCase (string = '') {
+    return lizaidong.lowerCase(string).replace(' ', '-')
+  },
+  // 字符串分割成空格连接的全小写
+  lowerCase (string) {
+    var res = string.match(/[a-z]+|[A-Za-z]+/g)
+    return res.map(lizaidong.toLower).join(' ')
+  },
+  // 首字母小写
+  lowerFirst (string) {
+    return string.replace(/^[A-Z]/, c => c.toLowerCase())
+  },
+  // 在起始和末尾都添加指定字符直到指定长度，优先满足后面
+  pad (string = '', length = 0, chars = ' ') {
+    var start_length = Math.floor((length - string.length) / 2) + string.length
+    var start = lizaidong.padStart(string, start_length, chars)
+    var end = lizaidong.padEnd(start, length, chars)
+    return end
+  },
+  // 在末尾添加指定字符直到达到指定长度，超出截掉末尾的
+  padEnd (string = '', length = 0, chars = ' ') {
+    while (string.length < length) {
+      string = string.replace(/$/, chars)
+    }
+    return string.slice(0, length)
+  },
+  // 在起始添加指定字符直到达到指定长度，超出截掉添加的内容的末尾部分
+  padStart (string = '', length = 0, chars = ' ') {
+    var length_s = string.length
+    while (string.length < length) {
+      string = string.replace(/^/, chars)
+    }
+    return string.slice(0, length - length_s) + string.slice(-length_s)
+  },
+  parseInt (string, radix = 10) {
+    return Number(string.toString(radix))
+  },
+  repeat (string = '', n = 1) {
+    var str = ''
+    while (n > 0) {
+      str += string
+      n--
+    }
+    return str
+  },
   replace (string = '', pattern, replacement) {
     // lodash只换第一次
     var match = string.match(pattern)
@@ -1401,11 +1478,11 @@ var lizaidong = {
     // } while (match)
     return string
   },
-  // 提取字符串中的连续字母，转换成首字母大写的
+  // 提取字符串中的连续字母，转换成全小写
   snakeCase (string) {
     var pattern = /([A-Z]?[a-z]+)|([a-zA-Z]+)/g
     string = string.match(pattern)
-    return string.map(lizaidong.toLower).map(lizaidong.upperFirst).join('_')
+    return string.map(lizaidong.toLower).join('_')
   },
   // 把字符串用分隔符分割成数组
   split (string, separator, limit) {
@@ -1419,8 +1496,11 @@ var lizaidong = {
     } while (match && res.length < limit)
     return res
   },
+  // 提取字符串中的连续字母，首字母大写
   startCase (string = '') {
-    return lizaidong.words(string).map(lizaidong.upperFirst).join(' ').trim()
+    var pattern = /([A-Z]?[a-z]+)|([a-zA-Z]+)/g
+    string = string.match(pattern)
+    return string.map(lizaidong.upperFirst).join(' ').trim()
   },
   // 字符串是否以目标值开头
   startsWith (string = '', target, position = 0) {
@@ -1463,7 +1543,7 @@ var lizaidong = {
   },
   // 删除字符串结尾的空格或指定字符
   trimEnd (string = '', chars = ' ') {
-    chars = typeof chars === 'string' ? chars : ' '
+    chars = chars ? chars : ' '
     while (chars.match(string[string.length - 1])) {
       string = string.slice(0, string.length - 1)
     }
@@ -1516,9 +1596,9 @@ var lizaidong = {
   // 作业：用reduce实现map,filter,forEach,slice,fill,concat....
   map (collection, iteratee = lizaidong.identity) {
     iteratee = lizaidong.iteratee(iteratee)
-    var keys = Object.keys(collection)
-    return keys.reduce((res, item, index, ary) => {
-      res[index] = iteratee(collection[item], item, ary)
+    var values = Object.values(collection)
+    return values.reduce((res, item, index, ary) => {
+      res[index] = iteratee(item, index, ary)
       return res
     }, [])
   },
