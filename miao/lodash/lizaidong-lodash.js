@@ -1050,7 +1050,7 @@ var lizaidong = {
     return typeof value === 'object' && value !== null
   },
   isPlainObject (value) {
-    return value.__proto__ === Object || value.__proto__ === undefined
+    return value.__proto__ === Object.prototype || value.__proto__ === undefined
   },
   isRegExp (value) {
     return Object.prototype.toString.call(value) === '[object RegExp]'
@@ -1349,9 +1349,8 @@ var lizaidong = {
     }
   },
   propertyOf (obj) {
-    if (!obj) return
     return function (path) {
-      return lizaidong.get(obj, path)
+      if (path) return lizaidong.get(obj, path)
     }
   },
   sum (array) {
@@ -1393,7 +1392,7 @@ var lizaidong = {
   // 把字符串转换成驼峰
   camelCase (string) {
     var res = string.match(/[a-zA-Z]+/g)
-    return res.map(lizaidong.capitalize).join('')
+    return res.map(lizaidong.capitalize).map(lizaidong.upperFirst).join('')
   },
   // 首字母大写其余小写
   capitalize (string = '') {
@@ -1544,11 +1543,20 @@ var lizaidong = {
   },
   // 删除字符串结尾的空格或指定字符
   trimEnd (string = '', chars = ' ') {
-    chars = chars ? chars : ' '
-    while (chars.match(string[string.length - 1])) {
-      string = string.slice(0, string.length - 1)
+    chars = typeof chars === 'string' ? chars : ' '
+    // while (chars.match(string[string.length - 1])) {
+    //   string = string.slice(0, string.length - 1)
+    // }
+    // return string
+    var index = -1
+    for (var i = string.length - 1; i >= 0; i--) {
+      if (string[i] === chars) {
+        index--
+      } else {
+        break
+      }
     }
-    return string
+    return string.slice(0, index)
   },
   // 根据条件截断字符串
   truncate (string = '', options = {}) {
@@ -1606,17 +1614,19 @@ var lizaidong = {
   forEach (collection, iteratee = lizaidong.identity) {
     iteratee = lizaidong.iteratee(iteratee)
     var keys = Object.keys(collection)
-    return keys.reduce ((res, item, _, ary) => {
+    keys.reduce ((res, item, _, ary) => {
       return iteratee(collection[item], item, ary)
     }, keys)
+    return collection
   },
   forEachRight (collection, iteratee = lizaidong.identity) {
     iteratee = lizaidong.iteratee(iteratee)
     collection = collection.reverse()
     var keys = Object.keys(collection)
-    return keys.reduce ((res, item, _, ary) => {
+    keys.reduce ((res, item, _, ary) => {
       return iteratee(collection[item], item, ary)
     }, keys)
+    return collection.reverse()
   },
   filter (collection, predicate = lizaidong.identity) {
     predicate = lizaidong.iteratee(predicate)
