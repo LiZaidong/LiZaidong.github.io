@@ -1386,10 +1386,10 @@ var lizaidong = {
 
   //   })
   // },
-  update (object, path, updater) {
-    var 
-    return updater(lizaidong.get(object, path))
-  },
+  // update (object, path, updater) {
+  //   var 
+  //   return updater(lizaidong.get(object, path))
+  // },
   // 把字符串转换成驼峰
   camelCase (string) {
     var res = string.match(/[a-zA-Z]+/g)
