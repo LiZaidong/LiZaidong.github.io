@@ -252,7 +252,7 @@ var lizaidong = {
   nthArg: nthArg,
   propertyOf: propertyOf,
   // parseJson : parseJson,
-  // iteratee: iteratee,
+  iteratee: iteratee,
 }
 function chunk (array, size = 1) {
   let res = []
@@ -281,13 +281,13 @@ function differenceBy (array, ...args) {
   })
 }
 function differenceWith (array, ...args) {
-  let f = null
+  var f = null
   if (typeof args[args.length - 1] === 'function' || typeof args[args.length - 1] === 'string') {
     f = args.pop()
   } else {
-    f = iteratee(identity)
+    f = identity
   }
-  f = iteratee(iteratee)
+  f = iteratee(f)
   var ary = [].concat(...args)
   return array.filter (item => {
     for (var i = 0; i < ary.length; i++) {
