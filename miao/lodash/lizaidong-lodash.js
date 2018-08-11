@@ -252,6 +252,7 @@ var lizaidong = {
   nthArg: nthArg,
   propertyOf: propertyOf,
   // parseJson : parseJson,
+  iteratee: iteratee,
 }
 function chunk (array, size = 1) {
   let res = []
