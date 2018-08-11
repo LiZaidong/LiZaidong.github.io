@@ -85,8 +85,8 @@ var lizaidong = {
   size: size,
   some: some,
   sortBy: sortBy,
-  defer: defer,
-  delay: delay,
+  // defer: defer,
+  // delay: delay,
   castArray: castArray,
   conformsTo: conformsTo,
   eq: eq,
@@ -157,8 +157,8 @@ var lizaidong = {
   random: random,
   assignIn: assignIn,
   at: at,
-  defaults: defaults,
-  defaultsDeep: defaultsDeep,
+  // defaults: defaults,
+  // defaultsDeep: defaultsDeep,
   findKey: findKey,
   findLastKey: findLastKey,
   forIn: forIn,
@@ -177,17 +177,17 @@ var lizaidong = {
   mapKeys: mapKeys,
   mapValues: mapValues,
   merge: merge,
-  mergeWith: mergeWith,
+  // mergeWith: mergeWith,
   omit: omit,
   omitBy: omitBy,
   pick: pick,
   pickBy: pickBy,
-  result: result,
-  set: set,
-  setWith: setWith,
+  // result: result,
+  // set: set,
+  // setWith: setWith,
   toPairs: toPairs,
   toPairsIn: toPairsIn,
-  transform: transform,
+  // transform: transform,
   // unset: unset,
   // update: update,
   // updateWith: updateWith,
@@ -252,7 +252,7 @@ var lizaidong = {
   nthArg: nthArg,
   propertyOf: propertyOf,
   // parseJson : parseJson,
-  iteratee: iteratee,
+  // iteratee: iteratee,
 }
 function chunk (array, size = 1) {
   let res = []
@@ -268,30 +268,30 @@ function difference (array, ...values) {
   return differenceBy.call(this, array, ...values, it => it)
 }
 function differenceBy (array, ...args) {
-  let iteratee = null
+  let f = null
   if (typeof args[args.length - 1] === 'function' || typeof args[args.length - 1] === 'string') {
-    iteratee = args.pop()
+    f = args.pop()
   } else {
-    iteratee = iteratee(identity)
+    f = iteratee(identity)
   }
-  iteratee = iteratee(iteratee)
-  var ary = [].concat(...args).map(arg => iteratee(arg))
+  f = iteratee(f)
+  var ary = [].concat(...args).map(arg => f(arg))
   return array.filter(item => {
-    return !ary.includes(iteratee(item))
+    return !ary.includes(f(item))
   })
 }
 function differenceWith (array, ...args) {
-  let iteratee = null
+  let f = null
   if (typeof args[args.length - 1] === 'function' || typeof args[args.length - 1] === 'string') {
-    iteratee = args.pop()
+    f = args.pop()
   } else {
-    iteratee = iteratee(identity)
+    f = iteratee(identity)
   }
-  iteratee = iteratee(iteratee)
+  f = iteratee(iteratee)
   var ary = [].concat(...args)
   return array.filter (item => {
     for (var i = 0; i < ary.length; i++) {
-      if (iteratee(item, ary[i])) {
+      if (f(item, ary[i])) {
         return false
       }
     }
@@ -436,16 +436,16 @@ function intersection (...array) {
   return intersectionBy(array[0], [].concat(...array.slice(1)), it => it)
 }
 function intersectionBy (array, ...args) {
-  let iteratee = null
+  let f = null
   if (typeof args[args.length - 1] === 'function' || typeof args[args.length - 1] === 'string') {
-    iteratee = args.pop()
+    f = args.pop()
   } else {
-    iteratee =  identity
+    f =  identity
   }
-  iteratee = iteratee(iteratee)
-  var ary = [].concat(...args).map(arg => iteratee(arg))
+  f = iteratee(f)
+  var ary = [].concat(...args).map(arg => f(arg))
   return array.filter(item => {
-    return ary.includes(iteratee(item))
+    return ary.includes(f(item))
   })
 }
 function intersectionWith (array, ...args) {
@@ -494,7 +494,7 @@ function pullAll (array, values) {
   return pull(array, values)
 }
 function pullAllBy (array, values, iteratee = identity) {
-  var f = iteratee(iteratee)
+  var f = lizaidong.iteratee(iteratee)
   return array.filter(item => {
     for (var i = 0; i < values.length; i++) {
       if ( isEqual(item, values[i])) {
@@ -531,7 +531,7 @@ function sortedIndex (array, value) {
   return sortedIndexBy(array, value, item => item)
 }
 function sortedIndexBy (array, value, iteratee =  identity) {
-  var f = iteratee(iteratee)
+  var f = lizaidong.iteratee(iteratee)
   for (var i = 0; i < array.length; i++) {
     if (f(value) <= f(array[i])) {
       return i
@@ -556,8 +556,8 @@ function sortedIndexOf (array, value) {
 function sortedLastIndex (array, value) {
   return sortedLastIndexBy(array, value, item => item)
 }
-function sortedLastIndexBy (array, value, iteratee =  identity) {
-  var f = iteratee(iteratee)
+function sortedLastIndexBy (array, value, iteratee = identity) {
+  var f = lizaidong.iteratee(iteratee)
   for (var i = array.length - 1; i >= 0; i--) {
     if (f(value) >= f(array[i])) {
       return i + 1
@@ -619,32 +619,32 @@ function union (...arrays) {
   return unionBy(...arrays, item => item)
 }
 function unionBy (array, ...args) {
-  let iteratee = null
+  let f = null
   if (typeof args[args.length - 1] === 'function' || typeof args[args.length - 1] === 'string') {
-    iteratee = args.pop()
+    f = args.pop()
   } else {
-    iteratee =  identity
+    f =  identity
   }
-  iteratee = iteratee(iteratee)
+  f = iteratee(f)
   let ary = array.concat(...args)
-  return uniqBy(ary, iteratee)
+  return uniqBy(ary, f)
 }
 function unionWith (array, ...args) {
-  var iteratee = null
+  var f = null
   if (typeof args[args.length - 1] === 'function' || typeof args[args.length - 1] === 'string') {
-    iteratee = args.pop()
+    f = args.pop()
   } else {
-    iteratee =  identity
+    f =  identity
   }
-  var f = iteratee(iteratee)
+  f = iteratee(f)
   return uniqWith([].concat(array, ...args), f)
 }
 function uniq (array) {
   return uniqBy(array, item => item)
 }
 function uniqBy (array, iteratee) {
-  iteratee = iteratee(iteratee)
-  let ary = array.map(item => iteratee(item))
+  var f = lizaidong.iteratee(iteratee)
+  let ary = array.map(item => f(item))
   return array.filter((item, index) => {
     if (ary.indexOf(ary[index]) === index) {
       return true
@@ -716,27 +716,27 @@ function zipObject (props, values) {
   return map
 }
 function zipObjectDeep (props, values) {
-  var map = {}
-  props.forEach ((item, index) => {
-    var key = item.split('.')
+  // var map = {}
+  // props.forEach ((item, index) => {
+  //   var key = item.split('.')
     // ['a', 'b[0]', 'c']
-  })
+  // })
 }
 function zipWith (array, ...args) {
-  var iteratee = null
+  var f = null
   if (typeof args[args.length - 1] ==='function' || typeof args[args.length - 1] === 'string') {
-    iteratee = args.pop()
+    f = args.pop()
   } else {
-    iteratee =  identity
+    f =  identity
   }
-  var f = iteratee(iteratee)
+  f = iteratee(f)
   var ary = zip(array, ...args)
   return ary.map(item => {
     return item = f(...item)
   })
 }
 function countBy (collection, iteratee =  identity) {
-  var f = iteratee(iteratee)
+  var f = lizaidong.iteratee(iteratee)
   return collection.reduce((map, item) => {
     var key = f(item)
     if (map[key]) {
@@ -804,9 +804,9 @@ function flatMapDeep (collection, iteratee) {
   return flatMapDepth(collection, iteratee, Infinity)
 }
 function flatMapDepth (collection, iteratee, depth = 1) {
-  var f = iteratee(iteratee)
+  var f = lizaidong.iteratee(iteratee)
   return collection.reduce((ary, item) => {
-    return ary.concat( flattenDepth(f(item), depth - 1))
+    return ary.concat(flattenDepth(f(item), depth - 1))
   }, [])
 }
 function partition (collection, predicate =  identity) {
@@ -823,7 +823,7 @@ function reduce (collection, iteratee =  identity, accumulator = collection[0]) 
   } else {
     i = 1
   }
-  var f = iteratee(iteratee)
+  var f = lizaidong.iteratee(iteratee)
   for (;i < keys.length; i++) {
     accumulator = f(accumulator, collection[keys[i]], keys[i])
   }
@@ -837,7 +837,7 @@ function reduceRight (collection, iteratee, accumulator = collection[collection.
   } else {
     i = collection.length - 2
   }
-  var f = iteratee(iteratee)
+  var f = lizaidong.iteratee(iteratee)
   for (;i >= 0; i--) {
     accumulator = f(accumulator, collection[keys[i]], keys[i])
   }
@@ -955,13 +955,13 @@ function gte(value, other) {
   return value >= other
 }
 function xorBy (array, ...args) {
-  var iteratee = null
+  var f = null
   if (typeof args[args.length - 1] === 'function' || typeof args[args.length - 1] === 'string') {
-    iteratee = args.pop()
+    f = args.pop()
   } else {
-    iteratee = identity
+    f = identity
   }
-  var f = iteratee(iteratee)
+  var f = iteratee(f)
   var array = [].concat(array, ...args)
   var ary = array.map(item => item = f(item))
   ary = ary.map((item, index) => {
@@ -974,13 +974,13 @@ function xorBy (array, ...args) {
   return array.filter((item, index) => ary[index])
 }
 function xorWith (array, ...args) {
-  var iteratee = null
+  var f = null
   if (typeof args[args.length - 1] === 'function' || typeof args[args.length - 1] === 'string') {
-    iteratee = args.pop()
+    f = args.pop()
   } else {
-    iteratee = identity
+    f = identity
   }
-  var f = iteratee(iteratee)
+  var f = iteratee(f)
   var array = [].concat(array, ...args)
   return array.filter((item, index) => {
     for (var i = 0; i < array.length; i++) {
@@ -992,16 +992,16 @@ function xorWith (array, ...args) {
   })
 }
 function keyBy (collection, iteratee =  identity) {
-  iteratee = iteratee(iteratee)
+  var f = lizaidong.iteratee(iteratee)
   return collection.reduce((map, item) => {
-    map[iteratee(item)] = item
+    map[f(item)] = item
     return map
   }, {})
 }
 function groupBy (collection, iteratee =  identity) {
-  iteratee = iteratee(iteratee)
+  var f = lizaidong.iteratee(iteratee)
   return collection.reduce ((map, item) => {
-    let key = iteratee(item)
+    let key = f(item)
     if (!map[key]) {
       map[key] = [item]
     } else {
@@ -1064,7 +1064,7 @@ function cloneDeep (value) {
     var keys = Object.keys(value)
     keys.forEach (item => {
       if (typeof value[item] === 'object') {
-        res[item] =  cloneDeep(value[item])
+        res[item] = cloneDeep(value[item])
       } else {
         res[item] = value[item]
       }
@@ -1131,21 +1131,21 @@ function findLastKey (object, predicate) {
     }
   }
 }
-function forIn (object, iteratee =  identity) {
-  var f = iteratee(iteratee)
+function forIn (object, iteratee = identity) {
+  var f = lizaidong.iteratee(iteratee)
   for (var key in object) {
     f(object[key], key, object)
   }
   return object
 }
-function forInRight (object, iteratee =  identity) {
-  var f =  iteratee(iteratee)
-  var keys =  keysIn(object).reverse()
+function forInRight (object, iteratee = identity) {
+  var f = lizaidong.iteratee(iteratee)
+  var keys = keysIn(object).reverse()
   keys.forEach(key => f(object[key], key, object))
   return object
 }
-function forOwn (object, iteratee =  identity) {
-  var f = iteratee(iteratee)
+function forOwn (object, iteratee = identity) {
+  var f = lizaidong.iteratee(iteratee)
   for (var key in object) {
     if (object.hasOwnProperty(key)) {
       f(object[key], key, object)
@@ -1153,8 +1153,8 @@ function forOwn (object, iteratee =  identity) {
   }
   return object
 }
-function forOwnRight (object, iteratee =  identity) {
-  var f =  iteratee(iteratee)
+function forOwnRight (object, iteratee = identity) {
+  var f =  lizaidong.iteratee(iteratee)
   var keys =  keys(object).reverse()
   keys.forEach(key => f(object[key], key, object))
   return object
@@ -1453,8 +1453,8 @@ function max (array) {
   return maxBy(array, it => it)
 }
 // 根据迭代函数求最大值
-function maxBy (array, iteratee =  identity) {
-  var f = iteratee(iteratee)
+function maxBy (array, iteratee = identity) {
+  var f = lizaidong.iteratee(iteratee)
   return array.reduce((prev, item) => {
     if (f(prev) > f(item)) {
       return prev
@@ -1469,7 +1469,7 @@ function mean (array) {
 }
 // 根据迭代函数求平均值
 function meanBy (array, iteratee) {
-  var f = iteratee(iteratee)
+  var f = lizaidong.iteratee(iteratee)
   return array.map(f).reduce((prev, item) => prev + item) / array.length
 }
 // 求最小值
@@ -1481,7 +1481,7 @@ function min (array) {
 }
 // 根据迭代函数求最小值
 function minBy (array, iteratee =  identity) {
-  var f = iteratee(iteratee)
+  var f = lizaidong.iteratee(iteratee)
   return array.reduce((prev, item) => {
     if (f(prev) < f(item)) {
       return prev
@@ -1571,7 +1571,7 @@ function hasIn (object, path) {
 function invert (object) {
   var keys = Object.keys(object)
   return keys.reduce((obj, key) => {
-    obj[object[key]] = [key]
+    obj[object[key]] = key
     return obj
   }, {})
 }  
@@ -1599,16 +1599,16 @@ function keysIn (object) {
   }
   return ary
 }
-function mapKeys (object, iteratee =  identity) {
-  var f =  iteratee(iteratee)
+function mapKeys (object, iteratee = identity) {
+  var f = lizaidong.iteratee(iteratee)
   var map = {}
   for (var key in object) {
     map[f(object[key], key, object)] = object[key]
   }
   return map
 }
-function mapValues (object, iteratee =  identity) {
-  var f =  iteratee(iteratee)
+function mapValues (object, iteratee = identity) {
+  var f = lizaidong.iteratee(iteratee)
   var map = {}
   for (var key in object) {
     map[key] = f(object[key], key, object)
@@ -1687,7 +1687,7 @@ function once (func) {
   }
 }
 function times (number, iteratee =  identity) {
-  var f = iteratee(iteratee)
+  var f = lizaidong.iteratee(iteratee)
   return new Array(number).fill(0).map((_, index) => index).map(f)
 }
 function conforms (source) {
@@ -1763,10 +1763,10 @@ function sum (array) {
   return sumBy(array, v => v)
 }
 function sumBy (array, iteratee) {
-  iteratee =  iteratee(iteratee)
+  var f = lizaidong.iteratee(iteratee)
   let sum = 0
   array.forEach(item => {
-    sum += iteratee(item)
+    sum += f(item)
   })
   return sum
 }
@@ -1787,7 +1787,7 @@ function iteratee (func) {
 // 把字符串转换成驼峰
 function camelCase (string) {
   var res = string.match(/[a-zA-Z]+/g)
-  return res.map( capitalize).map( upperFirst).join('')
+  return res.map(capitalize).map(lowerFirst).join('')
 }
 // 首字母大写其余小写
 function capitalize (string = '') {
@@ -1999,32 +1999,32 @@ function words (string = '', pattern = undefined) {
 }
 // 作业：用reduce实现map,filter,forEach,slice,fill,concat....
 function map (collection, iteratee =  identity) {
-  iteratee =  iteratee(iteratee)
+  var f =  lizaidong.iteratee(iteratee)
   var values = Object.values(collection)
   return values.reduce((res, item, index, ary) => {
-    res[index] = iteratee(item, index, ary)
+    res[index] = f(item, index, ary)
     return res
   }, [])
 }
-function forEach (collection, iteratee =  identity) {
-  iteratee =  iteratee(iteratee)
+function forEach (collection, iteratee = identity) {
+  var f = lizaidong.iteratee(iteratee)
   var keys = Object.keys(collection)
   keys.reduce ((res, item, _, ary) => {
-    return iteratee(collection[item], item, ary)
+    return f(collection[item], item, ary)
   }, keys)
   return collection
 }
 function forEachRight (collection, iteratee =  identity) {
-  iteratee =  iteratee(iteratee)
+  var f = lizaidong.iteratee(iteratee)
   collection = collection.reverse()
   var keys = Object.keys(collection)
   keys.reduce ((res, item, _, ary) => {
-    return iteratee(collection[item], item, ary)
+    return f(collection[item], item, ary)
   }, keys)
   return collection.reverse()
 }
 function filter (collection, predicate =  identity) {
-  predicate =  iteratee(predicate)
+  predicate = iteratee(predicate)
   return collection.reduce((res, item, index) => {
     if (predicate(item)) {
       res.push(item)
