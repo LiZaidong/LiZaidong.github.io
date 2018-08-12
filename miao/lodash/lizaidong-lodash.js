@@ -464,19 +464,19 @@ var lizaidong = (function () {
     var map = {}
     props.forEach ((item, index) => {
       var obj = map
-      var key = toPath(item).reverse()
-      while (key.length > 0) {
-        var path = key.pop()
-        if (window.isNaN(path)) {
-          obj[path] = obj[path] ? obj[path] : {}
+      var keys = toPath(item).reverse()
+      var key = keys.pop()
+      var value
+      while (value = keys.pop()) {
+        if (window.isNaN(value)) {
+          obj[key] = obj[key] ? obj[key] : {}
         } else {
-          obj[path] = obj[path] ? obj[path] : []
+          obj[key] = obj[key] ? obj[key] : []
         }
-        if (key.length === 0) {
-          obj[path] = values[index]
-        }
-        obj = obj[path]
+        obj = obj[key]
+        key = value
       }
+      obj[key] = values[index]
     })
     return map
   }
@@ -856,18 +856,6 @@ var lizaidong = (function () {
     sources.forEach(item => {
       for (var key in item) {
         object[key] = item[key]
-      }
-    })
-    return object
-  }
-  function merge (object, ...sources) {
-    sources.forEach (item => {
-      for (var key in item) {
-        if (typeof item[key] === 'object') {
-          merge(object[key], item[key])
-        } else {
-          object[key] = item[key]
-        }
       }
     })
     return object
@@ -1657,7 +1645,7 @@ var lizaidong = (function () {
     }
     return string
   }
-  // 去掉前后空格
+  // 去掉前后空格和指定字符
   function trim (string = '', chars = ' ') {
     chars = typeof chars === 'string' ? chars : ' '
     return  trimEnd( trimStart(string, chars), chars)
@@ -1665,27 +1653,14 @@ var lizaidong = (function () {
   // 删除字符串起始的空格或指定字符
   function trimStart (string = '', chars = ' ') {
     chars = typeof chars === 'string' ? chars : ' '
-    while (chars.match(string[0])) {
-      string = string.slice(1)
-    }
-    return string
+    var pattern = new RegExp('^[' + chars + ']+')
+    return string.replace(pattern, '')
   }
   // 删除字符串结尾的空格或指定字符
   function trimEnd (string = '', chars = ' ') {
     chars = typeof chars === 'string' ? chars : ' '
-    // while (chars.match(string[string.length - 1])) {
-    //   string = string.slice(0, string.length - 1)
-    // }
-    // return string
-    var index = -1
-    for (var i = string.length - 1; i >= 0; i--) {
-      if (string[i] === chars) {
-        index--
-      } else {
-        break
-      }
-    }
-    return string.slice(0, index)
+    var pattern = new RegExp('[' + chars + ']+$')
+    return string.replace(pattern, '')
   }
   // 根据条件截断字符串
   function truncate (string = '', options = {}) {
@@ -1796,14 +1771,17 @@ var lizaidong = (function () {
       return res
     }, [...array])
   }
-  function set () {
-  
+  function defer (func, ...args) {
+    var timer = setTimeout(function () {
+      func(...args)
+    }, 0)
+    return timer
   }
-  function defer () {
-  
-  }
-  function delay () {
-  
+  function delay (func, wait, ...args) {
+    var timer = setTimeout(function () {
+      func(...args)
+    }, wait)
+    return timer
   }
   function isEqualWith (value, other, customizer) {
     if (value === other) {
@@ -1853,23 +1831,119 @@ var lizaidong = (function () {
     if (number > Number.MAX_SAFE_INTEGER) return Number.MAX_SAFE_INTEGER
     return parseInt(number)
   }
-  function defaults () {
-  
+  function defaults (object, ...sources) {
+    sources.forEach(obj => {
+      for (var key in obj) {
+        if (!object[key]) {
+          object[key] = obj[key]
+        }
+      }
+    })
+    return object
   }
-  function defaultsDeep () {
-  
+  function defaultsDeep (object, ...sources) {
+    sources.forEach(obj => {
+      for (var key in obj) {
+        if (object[key]) {
+          if (typeof obj[key] === 'object') {
+            defaultsDeep(object[key], obj[key])
+          }
+        } else {
+          object[key] = obj[key]
+        }
+      }
+    })
+    return object
   }
-  function mergeWith () {
-  
+  function merge (object, ...sources) {
+    sources.forEach (item => {
+      for (var key in item) {
+        if (typeof item[key] === 'object') {
+          merge(object[key], item[key])
+        } else {
+          object[key] = item[key]
+        }
+      }
+    })
+    return object
   }
-  function result () {
-  
+  function mergeWith (object, ...sources) {
+    var f
+    if (typeof sources[sources.length - 1] === 'function' || typeof sources[sources.length - 1] === 'string') {
+      f = sources.pop()
+    } else {
+      f = identity
+    }
+    f = iteratee(f)
+
+    iterator(object, sources, f)
+    function iterator (obj, sources, f) {
+      sources.forEach(src => {
+        for (var key in src) {
+          if (obj[key]) {
+            obj[key] = f(obj[key], src[key], key, obj, src, '') // 没弄 stack
+          } else {
+            obj[key] = src[key]
+          }
+        }
+      })
+    }
+    return object
   }
-  function setWith () {
-  
+  function result (object, path, defaultValue) {
+    var res = get(object, path, defaultValue)
+    if (typeof res === 'function') {
+      return res.call(object)
+    }
+    return res
   }
-  function transform () {
-  
+  function set (object, path, value) {
+    if (typeof path === 'string') {
+      path = toPath(path)
+    }
+    var map = object
+    var length = path.length
+    var key = path[0]
+    for (var i = 1; i < length; i++) {
+      if (!map[key]) {
+        map[key] = window.isNaN(path[i]) ? {} : []
+      }
+      map = map[key]
+      key = path[i]
+    }
+    map[key] = value
+    return object
+  }
+  function setWith (object, path, value, customizer) {
+    if (typeof path === 'string') {
+      path = toPath(path)
+    }
+    var map = object
+    var length = path.length
+    for (var i = 0; i < length; i++) {
+      if (!map[path[i]]) {
+        map[path[i]] = customizer()
+      }
+      if (i === length - 1) {
+        map[path[i]] = value
+      }
+      map = map[path[i]]
+    }
+    map = value
+    return object
+  }
+  function transform (object, identity, accumulator) {
+    var f = iteratee(identity)
+    var keys = Object.keys(object)
+    var length = keys.length
+    accumulator = accumulator || keys.unshift()
+    for (var i = 0; i < length; i++) {
+      var flag = f(accumulator, object[keys[i]], keys[i], object)
+      if (flag === false) {
+        break
+      }
+    }
+    return accumulator
   }
   function invokeMap (collection, path, ...args) {
     var props = Object.keys(collection)
@@ -1888,6 +1962,79 @@ var lizaidong = (function () {
         }
       }
     })
+  }
+  // 移除object对象上的path路径上的属性
+  function unset (object, path) {
+    if (typeof path === 'string') path = toPath(path)
+    path = path.reverse()
+    var prop
+    var map = object
+    while(prop = path.pop()) {
+      if (map[prop]) {
+        map = map[prop]
+      } else {
+        return false
+      }
+      if (path.length === 1) {
+        var del = path.pop()
+        if (map[del]) {
+          return delete map[del]
+        } else {
+          return false
+        }
+      }
+    }
+  }
+  // 获取object对象上的path路径上的值并以此为参数调用updater赋值给path路径
+  function update (object, path, updater) {
+    if (typeof path === 'string') path = toPath(path)
+    var props = path.reverse()
+    var prop
+    var map = object
+    // while (props.length > 1 && (prop = props.pop())) {
+    //   map = map[prop]
+    // }
+    // map[props[0]] = updater(map[props[0]])
+    // return object
+
+
+    // var map = object
+    var key = path.pop()
+    map = map[key]
+    // var prop
+    while (props.length > 1 && (prop = props.pop())) {  
+      if (!map[prop]) {
+        map[key] = window.isNaN(prop) ? {} : []
+      }
+      map = map[key]
+      key = prop
+    }
+    map[props[0]] = updater(map[props[0]])
+    return object
+  }
+  function updateWith () {
+
+  }
+  function deburr () {
+
+  }
+  function bindAll () {
+
+  }
+  function mixin () {
+
+  }
+  function uniqueId () {
+
+  }
+  function curry () {
+
+  }
+  function memoize () {
+
+  }
+  function parseJson () {
+
   }
   return {
     chunk: chunk,
@@ -1976,8 +2123,8 @@ var lizaidong = (function () {
     size: size,
     some: some,
     sortBy: sortBy,
-    // defer: defer,
-    // delay: delay,
+    defer: defer,
+    delay: delay,
     castArray: castArray,
     conformsTo: conformsTo,
     eq: eq,
@@ -1993,7 +2140,7 @@ var lizaidong = (function () {
     isElement: isElement,
     isEmpty: isEmpty,
     isEqual: isEqual,
-    // isEqualWith: isEqualWith,
+    isEqualWith: isEqualWith,
     isError: isError,
     isFinite: isFinite,
     isFunction: isFunction,
@@ -2048,8 +2195,8 @@ var lizaidong = (function () {
     random: random,
     assignIn: assignIn,
     at: at,
-    // defaults: defaults,
-    // defaultsDeep: defaultsDeep,
+    defaults: defaults,
+    defaultsDeep: defaultsDeep,
     findKey: findKey,
     findLastKey: findLastKey,
     forIn: forIn,
@@ -2061,32 +2208,32 @@ var lizaidong = (function () {
     get : get ,
     has: has,
     invert: invert,
-    inverBy: invertBy,
+    invertBy: invertBy,
     invoke: invoke,
     keys: keys,
     keysIn: keysIn,
     mapKeys: mapKeys,
     mapValues: mapValues,
     merge: merge,
-    // mergeWith: mergeWith,
+    mergeWith: mergeWith,
     omit: omit,
     omitBy: omitBy,
     pick: pick,
     pickBy: pickBy,
-    // result: result,
-    // set: set,
-    // setWith: setWith,
+    result: result,
+    set: set,
+    setWith: setWith,
     toPairs: toPairs,
     toPairsIn: toPairsIn,
-    // transform: transform,
-    // unset: unset,
-    // update: update,
-    // updateWith: updateWith,
+    transform: transform,
+    unset: unset,
+    update: update,
+    updateWith: updateWith,
     values: values,
     valuesIn: valuesIn,
     camelCase: camelCase,
     capitalize: capitalize,
-    // deburr: deburr,
+    deburr: deburr,
     endsWith: endsWith,
     escape: escape,
     escapeRegExp: escapeRegExp,
@@ -2109,18 +2256,18 @@ var lizaidong = (function () {
     trimEnd: trimEnd,
     trimStart: trimStart,
     truncate: truncate,
-    // unescape: unescape,
+    unescape: unescape,
     upperCase: upperCase,
     upperFirst: upperFirst,
     words: words,
-    // bindAll: bindAll,
+    bindAll: bindAll,
     defaultTo: defaultTo,
     range: range,
     rangeRight: rangeRight,
-    // mixin: mixin,
+    mixin: mixin,
     times: times,
     toPath: toPath,
-    // uniqueId: uniqueId,
+    uniqueId: uniqueId,
     cloneDeep: cloneDeep,
     identity: identity,
     concat: concat,
@@ -2132,8 +2279,8 @@ var lizaidong = (function () {
     negate: negate,
     once: once,
     spread: spread,
-    // curry: curry,
-    // memoize: memoize,
+    curry: curry,
+    memoize: memoize,
     flip: flip,
     conforms: conforms,
     constant: constant,
@@ -2142,9 +2289,10 @@ var lizaidong = (function () {
     methodOf: methodOf,
     nthArg: nthArg,
     propertyOf: propertyOf,
-    // parseJson : parseJson,
+    parseJson : parseJson,
     iteratee: iteratee,
     invokeMap: invokeMap,
+    hasIn: hasIn,
   }
 })()
   
