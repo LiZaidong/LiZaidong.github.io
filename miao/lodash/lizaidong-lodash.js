@@ -1297,8 +1297,8 @@ var lizaidong = (function () {
       return obj
     }, {})
   }  
-  function invertBy (object, identity) {
-    var f =  iteratee(identity)
+  function invertBy (object, iteratee = identity) {
+    var f = lizaidong.iteratee(iteratee)
     var keys = Object.keys(object)
     return keys.reduce((obj, key) => {
       if (obj[object[key]]) {
@@ -1388,7 +1388,9 @@ var lizaidong = (function () {
       path =  toPath(path)
     }
     try {
-      return path.reduce((obj, item) => obj[item], object)
+      var res = path.reduce((obj, item) => obj[item], object)
+      if (!res) return defaultValue
+      return res
     } catch (e) {
       return defaultValue
     }
@@ -1895,61 +1897,14 @@ var lizaidong = (function () {
     if (typeof res === 'function') {
       return res.call(object)
     }
-    if (!res) return defaultValue
     return res
   }
   // 获取object对象上的path路径上的指向, 把value作为值给路径的指向
   function set (object, path, value) {
-    // if (typeof path === 'string') {
-    //   path = toPath(path)
-    // }
-    // var map = object
-    // var length = path.length
-    // var key = path[0]
-    // for (var i = 1; i < length; i++) {
-    //   if (!map[key]) {
-    //     map[key] = window.isNaN(path[i]) ? {} : []
-    //   }
-    //   map = map[key]
-    //   key = path[i]
-    // }
-    // map[key] = value
-    // return object
     return lizaidong.updateWith(object, path, it => it, '', value)
   }
   // 获取object对象上的path路径上的指向, 把value作为参数调用customizer重新赋值给路径的指向
   function setWith (object, path, value, customizer) {
-    // if (typeof path === 'string') {
-    //   path = toPath(path)
-    // }
-    // var map = object
-    // var length = path.length
-    // for (var i = 0; i < length; i++) {
-    //   if (!map[path[i]]) {
-    //     map[path[i]] = customizer()
-    //   }
-    //   if (i === length - 1) {
-    //     map[path[i]] = value
-    //   }
-    //   map = map[path[i]]
-    // }
-    // map = value
-    // return object
-    // if (typeof path === 'string') {
-    //   path = toPath(path)
-    // }
-    // var map = object
-    // var length = path.length
-    // var key = path[0]
-    // for (var i = 1; i < length; i++) {
-    //   if (!map[key]) {
-    //     map[key] = customizer()
-    //   }
-    //   map = map[key]
-    //   key = path[i]
-    // }
-    // map[key] = value
-    // return object
     return updateWith(object, path, it => it, customizer, value)
   }
   function transform (object, identity, accumulator) {
@@ -2007,24 +1962,6 @@ var lizaidong = (function () {
   }
   // 获取object对象上的path路径上的值并以此为参数调用updater赋值给path路径
   function update (object, path, updater) {
-    // var value
-    // var customizer
-    // if (arguments.length > 3) value = arguments[3] // set
-    // if (arguments.length > 4) customizer = arguments[4] //updateWith
-    // if (typeof path === 'string') path = toPath(path)
-    // var props = path.reverse()
-    // var prop
-    // var map = object
-    // var key = path.pop()
-    // while (prop = props.pop()) {  
-    //   if (!map[key]) {
-    //     map[key] = window.isNaN(prop) ? {} : []
-    //   }
-    //   map = map[key]
-    //   key = prop
-    // }
-    // map[key] = value ? updater(value) : updater(map[key])
-    // return object
     return updateWith(object, path, updater)
   }
   function updateWith (object, path, updater, customizer) {
