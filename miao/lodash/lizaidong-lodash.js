@@ -1030,7 +1030,7 @@ var lizaidong = (function () {
     }
   }
   function isNative(value) {
-    return /\{\s\[native code\]\s\}/.test('' + value)
+    return /\{\s*\[native code\]\s*\}/.test('' + value)
   }
   function isNil (value) {
     if (value === null || value === undefined) {
@@ -1297,8 +1297,8 @@ var lizaidong = (function () {
       return obj
     }, {})
   }  
-  function invertBy (object, iteratee =  identity) {
-    var f =  iteratee(iteratee)
+  function invertBy (object, identity) {
+    var f =  iteratee(identity)
     var keys = Object.keys(object)
     return keys.reduce((obj, key) => {
       if (obj[object[key]]) {
@@ -1895,42 +1895,62 @@ var lizaidong = (function () {
     if (typeof res === 'function') {
       return res.call(object)
     }
+    if (!res) return defaultValue
     return res
   }
+  // 获取object对象上的path路径上的指向, 把value作为值给路径的指向
   function set (object, path, value) {
-    if (typeof path === 'string') {
-      path = toPath(path)
-    }
-    var map = object
-    var length = path.length
-    var key = path[0]
-    for (var i = 1; i < length; i++) {
-      if (!map[key]) {
-        map[key] = window.isNaN(path[i]) ? {} : []
-      }
-      map = map[key]
-      key = path[i]
-    }
-    map[key] = value
-    return object
+    // if (typeof path === 'string') {
+    //   path = toPath(path)
+    // }
+    // var map = object
+    // var length = path.length
+    // var key = path[0]
+    // for (var i = 1; i < length; i++) {
+    //   if (!map[key]) {
+    //     map[key] = window.isNaN(path[i]) ? {} : []
+    //   }
+    //   map = map[key]
+    //   key = path[i]
+    // }
+    // map[key] = value
+    // return object
+    return lizaidong.updateWith(object, path, it => it, '', value)
   }
+  // 获取object对象上的path路径上的指向, 把value作为参数调用customizer重新赋值给路径的指向
   function setWith (object, path, value, customizer) {
-    if (typeof path === 'string') {
-      path = toPath(path)
-    }
-    var map = object
-    var length = path.length
-    for (var i = 0; i < length; i++) {
-      if (!map[path[i]]) {
-        map[path[i]] = customizer()
-      }
-      if (i === length - 1) {
-        map[path[i]] = value
-      }
-      map = map[path[i]]
-    }
-    map = value
-    return object
+    // if (typeof path === 'string') {
+    //   path = toPath(path)
+    // }
+    // var map = object
+    // var length = path.length
+    // for (var i = 0; i < length; i++) {
+    //   if (!map[path[i]]) {
+    //     map[path[i]] = customizer()
+    //   }
+    //   if (i === length - 1) {
+    //     map[path[i]] = value
+    //   }
+    //   map = map[path[i]]
+    // }
+    // map = value
+    // return object
+    // if (typeof path === 'string') {
+    //   path = toPath(path)
+    // }
+    // var map = object
+    // var length = path.length
+    // var key = path[0]
+    // for (var i = 1; i < length; i++) {
+    //   if (!map[key]) {
+    //     map[key] = customizer()
+    //   }
+    //   map = map[key]
+    //   key = path[i]
+    // }
+    // map[key] = value
+    // return object
+    return updateWith(object, path, it => it, customizer, value)
   }
   function transform (object, identity, accumulator) {
     var f = iteratee(identity)
@@ -1987,39 +2007,60 @@ var lizaidong = (function () {
   }
   // 获取object对象上的path路径上的值并以此为参数调用updater赋值给path路径
   function update (object, path, updater) {
+    // var value
+    // var customizer
+    // if (arguments.length > 3) value = arguments[3] // set
+    // if (arguments.length > 4) customizer = arguments[4] //updateWith
+    // if (typeof path === 'string') path = toPath(path)
+    // var props = path.reverse()
+    // var prop
+    // var map = object
+    // var key = path.pop()
+    // while (prop = props.pop()) {  
+    //   if (!map[key]) {
+    //     map[key] = window.isNaN(prop) ? {} : []
+    //   }
+    //   map = map[key]
+    //   key = prop
+    // }
+    // map[key] = value ? updater(value) : updater(map[key])
+    // return object
+    return updateWith(object, path, updater)
+  }
+  function updateWith (object, path, updater, customizer) {
+    var value
+    if (arguments.length > 4) value = arguments[4] // set, setWith
     if (typeof path === 'string') path = toPath(path)
     var props = path.reverse()
     var prop
     var map = object
-    // while (props.length > 1 && (prop = props.pop())) {
-    //   map = map[prop]
-    // }
-    // map[props[0]] = updater(map[props[0]])
-    // return object
-
-
-    // var map = object
     var key = path.pop()
-    map = map[key]
-    // var prop
-    while (props.length > 1 && (prop = props.pop())) {  
-      if (!map[prop]) {
-        map[key] = window.isNaN(prop) ? {} : []
+    while (prop = props.pop()) {  
+      if (!map[key]) {
+        if (customizer) {
+          map[key] = customizer()
+        } else {
+          map[key] = window.isNaN(prop) ? {} : []
+        }
       }
       map = map[key]
       key = prop
     }
-    map[props[0]] = updater(map[props[0]])
+    map[key] = value ? updater(value) : updater(map[key])
     return object
   }
-  function updateWith () {
-
+  function unescape (string) {
+    var map = new Map([['&amp;', '&'], ['&lt;', '<'], ['&gt;', '>'], ['&quot;', '"'], ['&#39;', "'"], ['&#96;', '`']])
+    var pattern = /(\&amp;)|(\&lt;)|(\&gt;)|(\&quot;)|(\&#39;)|(\&#96;)/g
+    return string.replace(pattern, c => map.get(c))
   }
   function deburr () {
 
   }
-  function bindAll () {
-
+  function bindAll (object, methodNames) {
+    methodNames.forEach(mathod => {
+      
+    })
   }
   function mixin () {
 
@@ -2027,8 +2068,16 @@ var lizaidong = (function () {
   function uniqueId () {
 
   }
-  function curry () {
-
+  function curry (func, arity = func.length) { // curried(1)(_, 3)(2); 没有弄
+    var ary = []
+    return function fn(...args) {
+      ary = ary.concat(args)
+      if (ary.length < arity) {
+        return fn
+      } else {
+        return func(...ary)
+      }
+    }
   }
   function memoize () {
 
