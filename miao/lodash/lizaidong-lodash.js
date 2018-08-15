@@ -1301,10 +1301,11 @@ var lizaidong = (function () {
     var f = lizaidong.iteratee(iteratee)
     var keys = Object.keys(object)
     return keys.reduce((obj, key) => {
-      if (obj[object[key]]) {
-        obj[f(object[key])].push(key)
+      var prop = f(object[key])
+      if (obj[prop]) {
+        obj[prop].push(key)
       } else {
-        obj[f(object[key])] = [key]
+        obj[prop] = [key]
       }
       return obj
     }, {})
@@ -1653,8 +1654,8 @@ var lizaidong = (function () {
     return  trimEnd( trimStart(string, chars), chars)
   }
   // 删除字符串起始的空格或指定字符
-  function trimStart (string = '', chars = ' ') {
-    chars = typeof chars === 'string' ? chars : ' '
+  function trimStart (string = '', chars = '\\s') {
+    chars = typeof chars === 'string' ? chars : '\\s'
     var pattern = new RegExp('^[' + chars + ']+')
     return string.replace(pattern, '')
   }
@@ -2019,8 +2020,18 @@ var lizaidong = (function () {
   function memoize () {
 
   }
-  function parseJson () {
-
+  // var a = {
+  //   "employees": [
+  //       { "firstName":"Bill" , "lastName":"Gates" },
+  //       { "firstName":"George" , "lastName":"Bush" },
+  //       { "firstName":"Thomas" , "lastName":"Carter" }
+  //   ]
+  // }
+  // "{"employees":[{"firstName":"Bill","lastName":"Gates"},{"firstName":"George","lastName":"Bush"},{"firstName":"Thomas","lastName":"Carter"}]}"
+  function parseJson (string) {
+    var json = {}
+    var map = json
+    
   }
   return {
     chunk: chunk,
