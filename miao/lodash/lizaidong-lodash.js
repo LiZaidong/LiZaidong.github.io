@@ -1649,8 +1649,8 @@ var lizaidong = (function () {
     return string
   }
   // 去掉前后空格和指定字符
-  function trim (string = '', chars = ' ') {
-    chars = typeof chars === 'string' ? chars : ' '
+  function trim (string = '', chars = '\\s') {
+    chars = typeof chars === 'string' ? chars : '\\s'
     return  trimEnd( trimStart(string, chars), chars)
   }
   // 删除字符串起始的空格或指定字符
@@ -1660,8 +1660,8 @@ var lizaidong = (function () {
     return string.replace(pattern, '')
   }
   // 删除字符串结尾的空格或指定字符
-  function trimEnd (string = '', chars = ' ') {
-    chars = typeof chars === 'string' ? chars : ' '
+  function trimEnd (string = '', chars = '\\s') {
+    chars = typeof chars === 'string' ? chars : '\\s'
     var pattern = new RegExp('[' + chars + ']+$')
     return string.replace(pattern, '')
   }
