@@ -24,7 +24,7 @@
 - 熟练使用Css预处理器Less，Sass等；
 - 熟悉Vue+Vuex+VueRouter，对React有所了解；
 - 可承受一定的工作压力，有责任心，通过持续学习完善自身，具有良好的沟通能力及团队协作能力。
-- [leetcode](https://leetcode.com/liZaidong/)已经刷了190题，自己实现了lodash上超过90%以上的函数
+- [leetcode](https://leetcode.com/liZaidong/)已经刷了190题，自己实现了[lodash](https://lizaidong.github.io/miao/lodash/lizaidong-lodash.js)上超过90%以上的函数
 
 # 工作经历
 

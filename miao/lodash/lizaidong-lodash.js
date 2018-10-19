@@ -1992,20 +1992,10 @@ var lizaidong = (function () {
     var pattern = /(\&amp;)|(\&lt;)|(\&gt;)|(\&quot;)|(\&#39;)|(\&#96;)/g
     return string.replace(pattern, c => map.get(c))
   }
-  function deburr () {
-
-  }
-  function bindAll (object, methodNames) {
-    methodNames.forEach(mathod => {
-      
-    })
-  }
-  function mixin () {
-
-  }
-  function uniqueId () {
-
-  }
+  function deburr () {}
+  function bindAll (object, methodNames) {}
+  function mixin () {}
+  function uniqueId () {}
   function curry (func, arity = func.length) { // curried(1)(_, 3)(2); 没有弄
     var ary = []
     return function fn(...args) {
@@ -2016,22 +2006,6 @@ var lizaidong = (function () {
         return func(...ary)
       }
     }
-  }
-  function memoize () {
-
-  }
-  // var a = {
-  //   "employees": [
-  //       { "firstName":"Bill" , "lastName":"Gates" },
-  //       { "firstName":"George" , "lastName":"Bush" },
-  //       { "firstName":"Thomas" , "lastName":"Carter" }
-  //   ]
-  // }
-  // "{"employees":[{"firstName":"Bill","lastName":"Gates"},{"firstName":"George","lastName":"Bush"},{"firstName":"Thomas","lastName":"Carter"}]}"
-  function parseJson (string) {
-    var json = {}
-    var map = json
-    
   }
   return {
     chunk: chunk,

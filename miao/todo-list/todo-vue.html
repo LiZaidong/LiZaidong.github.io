@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+  <link rel="stylesheet" href="./todo-list.css">
+  <script src="https://unpkg.com/vue@2.5.17/dist/vue.js"></script>
+</head>
+<body>
+  <section class="todoapp" v-cloak id="app">
+    <header class="header">
+      <h1>todos</h1>
+      <input 
+        class="new-todo"
+        @keyup.enter="add"  
+        v-model="addText" 
+      >
+    </header>
+    <section class="main">
+      <input 
+        id="toggle-all" 
+        class="toggle-all" 
+        type="checkbox"
+        v-model="isCheckedAll"
+
+      >
+      <label for="toggle-all">Mark all as complete</label>
+      <ul class="todo-list">
+        <li 
+          v-for="(item, index) in list"
+          @mouseenter="btnIndex = index"
+          @mouseleave="btnIndex = ''"
+          :class="{editing: editIndex === index, completed: item.done}"
+          v-show="showCategory === item.done || showCategory === 'all'"
+        >
+          <div class="view" @dblclick="editIndex = index">
+            <input 
+              class="toggle" 
+              type="checkbox" 
+              v-model="item.done"
+            >
+            <label>{{ item.text }}</label>
+            <button 
+              class="destroy" 
+              v-show="index === btnIndex"
+              @click="del(index)"
+            >
+            </button>
+          </div>
+          <input 
+            class="edit" 
+            type="text"
+            v-focus
+            @blur="doneEdit(index)"
+            @keyup.enter="doneEdit(index)"
+            @keyup.esc="editIndex=''"
+            v-model="item.text"
+          >
+        </li>
+      </ul>
+    </section>
+    <footer class="footer" v-if="list.length">
+      <span class="todo-count">
+        <strong>{{ total }}</strong> items left
+      </span>
+      <ul class="filters">
+        <li><a @click="switchCategory(-1)" :class="{selected: showCategory === 'all'}">All</a></li>
+        <li><a @click="switchCategory(1)" :class="{selected: showCategory === false}">Active</a></li>
+        <li><a @click="switchCategory(0)" :class="{selected: showCategory === true}">Completed</a></li>
+      </ul>
+      <button 
+        class="clear-completed" 
+        v-show="showClearBtn"
+        @click="clear"
+      >
+        Clear completed
+      </button>
+    </footer>
+  </section>
+</body>
+<script>
+  var vm = new Vue({
+    el: '#app',
+    data: {
+      addText: '',
+      list: [],
+      btnIndex: '',         
+      editIndex: '',        
+      editText: '',         
+      showCategory: 'all',   
+    },
+    methods: {
+      // 添加
+      add () {
+        if (this.addText.trim()) {
+          this.list.push({
+            text: this.addText,
+            done: false,
+          })
+          this.addText = ''
+        }
+      },
+      // 删除
+      del (index) {
+        this.list.splice(index, 1)
+      },
+      // 筛选
+      switchCategory (key) {
+        switch (key) {
+          case -1:
+            this.showCategory = 'all'
+            break
+          case 1:
+            this.showCategory = false
+            break
+          case 0:
+            this.showCategory = true
+            break
+        }
+      },
+      // 清除
+      clear () {
+        this.list.forEach((item, index) => {
+          if (item.done) {
+            this.list.splice(index, 1)
+          }
+        })
+      },
+      // 修改完成
+      doneEdit (index) {
+        if (!this.list[index].text.trim()) {
+          this.list.splice(index, 1)
+        }
+        this.editIndex = ''
+      }
+    },
+    computed: {
+      // 未完成数
+      total () {
+        return this.list.filter(it => !it.done).length
+      },
+      // 清除按钮
+      showClearBtn () {
+        return this.total < this.list.length
+      },
+      // 全选与否
+      isCheckedAll: {
+        get () {
+          return this.list.every(it => it.done) && this.list.length > 0
+        },
+        set (value) {
+          this.list.forEach(it => {
+            it.done = value
+          })
+        }
+      }
+    },
+    directives:{
+      "focus": {
+        update (el) {
+          el.focus();
+        }
+      }
+    }
+  })
+</script>
+</html>
