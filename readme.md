@@ -38,17 +38,17 @@
 - 项目自身用的jQuery开发，后引入Vue的使用，并逐步更多地使用Vue进行改版，在细节上我运用了Swiper.js, Isroll.js,lazyload.js等库，增强用户体验
 - 我在这个项目中遇到的最大困难是一级页面加载列表点击进入二级详情页，返回不能保存一级页面滚动条位置，使用hash将二级页面详情页和一级列表页整合，一级列表页点击更改hash重新请求新的二级详情页内容并展示，由此将列表与详情页面进行整合，大大提升用户体验
 
-### [todoList](http://baidu.com)
+### [todoList](https://lizaidong.github.io/miao/todo-list/todo-vue.html)
 
 用原生js，Vue，React与Vue组件化实现了一遍todolist，虽然是个小项目，实现了一些功能：双击编辑，编辑若为空则视为删除条目，切换完成与否显示状态
 
-### 仿去哪儿 
+### [仿去哪儿](https://github.com/LiZaidong/travel) 
 
-这个项目网上很多人做了，但个人觉得做东西是为了通过这个技术学会一些技能，而不限于项目本身，这个项目虽然也不大，但也涉及到挺多东西的，自己还加了列表点击进入详情缓存列表的功能
+这个项目网上很多人做了，但个人觉得做东西是为了通过这个技术学会一些技能，而不限于项目本身，这个项目虽然也不大，但也涉及到挺多东西的，自己还用router的history模式实现了首页点击进入详情页首页缓存得以记住滚动位置
 
 ### 一些css动效
 
-一些用纯css实现的效果，tips，slider，transform
+一些用纯css实现的效果，[tips](https://lizaidong.github.io/miao/balloon-css.html)，[slider](https://lizaidong.github.io/miao/slider/index-1.html)，[transform](https://lizaidong.github.io/miao/transform.html)
 
 # 致谢
 
