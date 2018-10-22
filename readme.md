@@ -18,14 +18,12 @@
 ## 自我评价
 
 - js，html，css基础扎实，[leetcode](https://leetcode.com/liZaidong/)已经刷了190题，自己实现了[lodash](https://lizaidong.github.io/miao/lodash/lizaidong-lodash.js)上超过90%以上的函数
-- 熟悉各种Web前端技术和标准(Javascript/ES6+、HTML/HTML5、CSS/CSS3)，熟悉页面架构和布局，对表现与数据分离、页面标签语义化等有一定理解；
-- 熟练运用rem单位和flex布局实现不同浏览器宽度下的整页缩放；
-- 了解移动端页面兼容性问题，了解响应式布局页面开发；
-- 熟练LocalStorage、SessionStorage、Cookie等本地存储
-- 熟练使用Css预处理器Less，Sass等；
+- 熟练掌握Javascript/ES6+、HTML/HTML5、CSS/CSS3)，BootStrap对页面架构和布局，页面标签语义化等有一定理解，熟练使用Css预处理器Less，Sass等；
 - 熟悉Vue+Vuex+VueRouter，对React有所了解；
+- 了解Node.js,express;
+- 熟练使用git，svn进行代码状态管理，了解webpack打包工具；
+- 熟悉Javascript数据结构，及常见排序算法；
 - 可承受一定的工作压力，有责任心，通过持续学习完善自身，具有良好的沟通能力及团队协作能力。
-- 
 
 # 工作经历
 
