@@ -34,7 +34,7 @@
 > 这个项目主要是提供本地生活服务，主打本地生鲜配送服务
 
 - 工作描述：负责公司项目分配的模块的实现，参与组内对项目需求的讨论
-- 网站前台使用技术jQuery，BootStrap，Vue开发，以及swiper，iscroll等插件提升用户体验，用svn进行代码管理
+- 网站前台使用jQuery，BootStrap，Vue开发，以及swiper，iscroll等插件提升用户体验，用svn进行代码管理
 
 ### [todoList](https://lizaidong.github.io/miao/todo-list/todo-list.html)
 
